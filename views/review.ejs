@@ -141,72 +141,12 @@
                     <div class="text-sm text-gray-500">Based on <%= reviews.length %> reviews</div>
                 </div>
                 
-                <div class="flex-1">
-                    <!-- <div class="space-y-2">
-                        <div class="flex items-center gap-2">
-                            <div class="text-sm w-8">5★</div>
-                            <div class="rating-bar">
-                                <div class="rating-bar-fill" style="width: 75%"></div>
-                            </div>
-                            <div class="text-sm text-gray-500">1,759</div>
-                        </div>
-                        <div class="flex items-center gap-2">
-                            <div class="text-sm w-8">4★</div>
-                            <div class="rating-bar">
-                                <div class="rating-bar-fill" style="width: 15%"></div>
-                            </div>
-                            <div class="text-sm text-gray-500">352</div>
-                        </div>
-                        <div class="flex items-center gap-2">
-                            <div class="text-sm w-8">3★</div>
-                            <div class="rating-bar">
-                                <div class="rating-bar-fill" style="width: 5%"></div>
-                            </div>
-                            <div class="text-sm text-gray-500">117</div>
-                        </div>
-                        <div class="flex items-center gap-2">
-                            <div class="text-sm w-8">2★</div>
-                            <div class="rating-bar">
-                                <div class="rating-bar-fill" style="width: 3%"></div>
-                            </div>
-                            <div class="text-sm text-gray-500">70</div>
-                        </div>
-                        <div class="flex items-center gap-2">
-                            <div class="text-sm w-8">1★</div>
-                            <div class="rating-bar">
-                                <div class="rating-bar-fill" style="width: 2%"></div>
-                            </div>
-                            <div class="text-sm text-gray-500">47</div>
-                        </div>
-                    </div> -->
-                </div>
+      
             </div>
         </div>
 
       <div class=" sortOptions flex items-center justify-between mb-6">
-        <!-- <div class="flex gap-3 overflow-x-auto pb-2">
-          <button
-            class="px-4 py-2 bg-primary text-white rounded-full text-sm whitespace-nowrap"
-          >
-            Most Recent
-          </button>
-          <button
-            class="px-4 py-2 bg-white text-gray-700 rounded-full text-sm whitespace-nowrap"
-          >
-            Highest Rated
-          </button>
-          <button
-            class="px-4 py-2 bg-white text-gray-700 rounded-full text-sm whitespace-nowrap"
-          >
-            Critical Reviews
-          </button>
-          <button
-            class="px-4 py-2 bg-white text-gray-700 rounded-full text-sm whitespace-nowrap"
-          >
-            With Photos
-          </button>
-        </div> -->
-       
+ 
         <div>
           <h1 class=" text-xl font-semibold tracking-wide">Hello, <%= user.username %>👋🏻</h1>
            <p class="text-lg tracking-wide">We Appreciate your Thoughts & Reviews</p>
@@ -278,7 +218,6 @@
       
       
       
-      <!-- <div class="space-y-6" id="reviewsList"> -->
         
       </div>
     </div>
@@ -286,20 +225,17 @@
     <script>
 
     async function fetchReviews() {
- const response = await fetch("http://localhost:3000/api/reviews");
+ const response = await fetch("/api/reviews");
 
   try {
-    console.log("Fetching reviews..."); // Debugging
 
     const response = await fetch("/api/reviews");
-    console.log("Response:", response); // Debugging
 
     if (!response.ok) {
       throw new Error(`Failed to fetch reviews: ${response.statusText}`);
     }
 
     const reviews = await response.json();
-    console.log("Reviews Data:", reviews); // Debugging
 
     const reviewsList = document.getElementById("reviewsList");
     reviewsList.innerHTML = ""; // Clear existing reviews

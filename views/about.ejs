@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Us | Phone Price Comparison</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .gradient-bg {
+            background: linear-gradient(135deg, #f9fafb 0%, #e5e7eb 100%);
+        }
+        .card-hover {
+            transition: all 0.3s ease;
+        }
+        .card-hover:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body class="gradient-bg min-h-screen">
+    <!-- Navigation would be included here in your layout -->
+    
+    <main class="container mx-auto px-4 py-12">
+        <!-- Hero Section -->
+        <section class="text-center mb-16">
+            <h1 class="text-4xl md:text-5xl font-bold text-gray-800 mb-4">About Phone Price Comparison</h1>
+            <p class="text-xl text-gray-600 max-w-3xl mx-auto">Helping you make smarter smartphone purchases with transparent price comparisons across trusted retailers.</p>
+        </section>
+
+        <!-- Project Info Section -->
+        <section class="mb-16">
+            <div class="bg-white rounded-2xl shadow-sm p-8 md:p-10 card-hover">
+                <div class="flex items-center mb-6">
+                    <div class="bg-blue-100 p-3 rounded-full mr-4">
+                        <i class="fas fa-mobile-screen text-blue-700 text-2xl"></i>
+                    </div>
+                    <h2 class="text-2xl font-semibold text-gray-800">About This Project</h2>
+                </div>
+                <p class="text-gray-600 mb-6">
+                    The Phone Price Comparison platform is designed to help users compare smartphone prices from multiple trusted online stores — all in one place. It simplifies decision-making by allowing users to quickly analyze pricing, features, and reviews before making a purchase.
+                </p>
+                <p class="text-gray-600">
+                    This platform is ideal for anyone who wants to make smart phone-buying decisions without jumping between websites.
+                </p>
+            </div>
+        </section>
+
+        <!-- Two Column Layout -->
+        <section class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-16">
+            <!-- Creator Info -->
+            <div class="bg-white rounded-2xl shadow-sm p-8 card-hover">
+                <div class="flex items-center mb-6">
+                    <div class="bg-yellow-100 p-3 rounded-full mr-4">
+                        <i class="fas fa-user text-yellow-500 text-2xl"></i>
+                    </div>
+                    <h2 class="text-2xl font-semibold text-gray-800">About the Creator</h2>
+                </div>
+                <div class="flex items-center mb-6">
+                    <div class="w-16 h-16 rounded-full bg-gray-200 flex items-center justify-center mr-4">
+                        <i class="fas fa-user-astronaut text-gray-500 text-2xl"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-lg font-medium text-gray-800">Aakash</h3>
+                        <p class="text-gray-500">Full-Stack Developer</p>
+                    </div>
+                </div>
+                <p class="text-gray-600 mb-6">
+                    Hi! I'm a self-taught full-stack developer passionate about building real-world applications using the MERN stack and integrating AI features to enhance user experience.
+                </p>
+                <p class="text-gray-600 mb-6">
+                    This project is part of my personal learning journey and showcases my skills in backend, frontend, and AI integration using technologies like Node.js, Express.js, MongoDB, React, EJS, and Google's Generative AI.
+                </p>
+                <div class="flex space-x-4">
+                    <a href="https://github.com/aakash-gupta02" class="text-gray-500 hover:text-blue-700 transition-colors">
+                        <i class="fab fa-github text-2xl"></i>
+                    </a>
+                    <a href="#" class="text-gray-500 hover:text-blue-500 transition-colors">
+                        <i class="fab fa-linkedin text-2xl"></i>
+                    </a>
+                    <a href="https://www.instagram.com/aakash.grafix" class="text-gray-500 hover:text-pink-600 transition-colors">
+                        <i class="fab fa-instagram text-2xl"></i>
+                    </a>
+                    <a href="https://t.me/aakashgupta052004" class="text-gray-500 hover:text-blue-400 transition-colors">
+                        <i class="fab fa-telegram text-2xl"></i>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Data Info -->
+            <div class="bg-white rounded-2xl shadow-sm p-8 card-hover">
+                <div class="flex items-center mb-6">
+                    <div class="bg-red-100 p-3 rounded-full mr-4">
+                        <i class="fas fa-database text-red-500 text-2xl"></i>
+                    </div>
+                    <h2 class="text-2xl font-semibold text-gray-800">Note on Data</h2>
+                </div>
+                <p class="text-gray-600 mb-6">
+                    Currently, the product data (phone listings, prices, and comparisons) is dummy/test data meant for demonstration purposes only. Actual live data fetching and crawling from platforms like Amazon or Flipkart will be implemented in future iterations.
+                </p>
+                <p class="text-gray-600">
+                    Reviews are also generated or entered manually for demo use — no real customer data is being used at this stage.
+                </p>
+            </div>
+        </section>
+
+        <!-- Future Plans -->
+        <section class="mb-16">
+            <div class="bg-white rounded-2xl shadow-sm p-8 md:p-10 card-hover">
+                <div class="flex items-center mb-6">
+                    <div class="bg-green-100 p-3 rounded-full mr-4">
+                        <i class="fas fa-rocket text-green-500 text-2xl"></i>
+                    </div>
+                    <h2 class="text-2xl font-semibold text-gray-800">Future Plans</h2>
+                </div>
+                <p class="text-gray-600 mb-8">
+                    I'm working on integrating exciting new features to make your phone shopping experience even better:
+                </p>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="flex items-start">
+                        <div class="bg-blue-100 p-2 rounded-full mr-4 mt-1">
+                            <i class="fas fa-bolt text-blue-700 text-sm"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-medium text-gray-800 mb-1">Real-time API Integration</h3>
+                            <p class="text-gray-500 text-sm">Live price updates from major retailers</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start">
+                        <div class="bg-yellow-100 p-2 rounded-full mr-4 mt-1">
+                            <i class="fas fa-comment text-yellow-500 text-sm"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-medium text-gray-800 mb-1">User-Generated Reviews</h3>
+                            <p class="text-gray-500 text-sm">Authentic feedback from real customers</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start">
+                        <div class="bg-purple-100 p-2 rounded-full mr-4 mt-1">
+                            <i class="fas fa-bell text-purple-500 text-sm"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-medium text-gray-800 mb-1">Price Alerts</h3>
+                            <p class="text-gray-500 text-sm">Get notified when prices drop</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start">
+                        <div class="bg-pink-100 p-2 rounded-full mr-4 mt-1">
+                            <i class="fas fa-heart text-pink-500 text-sm"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-medium text-gray-800 mb-1">Wishlist Syncing</h3>
+                            <p class="text-gray-500 text-sm">Track phones across devices</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Color Theme -->
+   
+    </main>
+
+</body>
+</html>

@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AI Phone Assistant</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/remixicon@4.5.0/fonts/remixicon.css"
+      rel="stylesheet"
+    />
+    <style>
+      .chat-container::-webkit-scrollbar {
+        width: 6px;
+      }
+      .chat-container::-webkit-scrollbar-track {
+        background: #f1f1f1;
+      }
+      .chat-container::-webkit-scrollbar-thumb {
+        background: #888;
+        border-radius: 3px;
+      }
+      .chat-container::-webkit-scrollbar-thumb:hover {
+        background: #555;
+      }
+      .loading-dots:after {
+        content: ".";
+        animation: dots 1.5s infinite step-end;
+      }
+      @keyframes dots {
+        0%,
+        20% {
+          content: ".";
+        }
+        40% {
+          content: "..";
+        }
+        60% {
+          content: "...";
+        }
+        80%,
+        100% {
+          content: "";
+        }
+      }
+    </style>
+
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              primary: "#6366f1",
+              secondary: "#f0f2f5",
+            },
+            borderRadius: {
+              none: "0px",
+              sm: "4px",
+              DEFAULT: "8px",
+              md: "12px",
+              lg: "16px",
+              xl: "20px",
+              "2xl": "24px",
+              "3xl": "32px",
+              full: "9999px",
+              button: "8px",
+            },
+          },
+        },
+      };
+    </script>
+  </head>
+  <body class="bg-gray-50 min-h-screen w-full">
+    <div
+      class="max-w-7xl mx-auto bg-white shadow-lg min-h-screen flex flex-col p-5"
+    >
+      <header
+        class="px-6 py-4 border-b flex items-center justify-between bg-white shadow-sm"
+      >
+        <div class="flex items-center gap-3">
+          <a href="/">
+            <span class="font-['Pacifico'] text-2xl text-primary"
+              >Price Compareto</span
+            ></a
+          >
+          <h1 class="text-xl font-semibold">AI Assistant</h1>
+        </div>
+        <div class="flex items-center gap-3">
+          <div class="hidden md:flex items-center space-x-8">
+            <a href="/" class="text-gray-700 hover:text-primary">Home</a>
+            <a href="/compare" class="text-gray-700 hover:text-primary"
+              >Compare</a
+            >
+            <a href="/wishlist" class="wishlist-button">View Wishlist</a>
+            <button
+              class="w-10 h-10 flex items-center justify-center hover:bg-gray-100 rounded-full"
+            >
+              <i class="ri-robot-2-line text-indigo-600 text-xl"></i>
+            </button>
+          </div>
+        </div>
+      </header>
+
+      <div class="flex-1 overflow-y-auto chat-container p-6" id="chatContainer">
+        <div class="flex gap-4 mb-6">
+          <div
+            class="w-8 h-8 flex-shrink-0 flex items-center justify-center bg-indigo-100 rounded-full"
+          >
+            <i class="ri-robot-2-line text-indigo-600"></i>
+          </div>
+          <div class="bg-gray-100 rounded-lg p-4 max-w-[80%]">
+            <p class="text-gray-700">
+              Hello! I'm your AI phone assistant. I can help you find the
+              perfect phone based on your requirements. What kind of phone are
+              you looking for?
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="border-t p-4 bg-white">
+        <div class="flex gap-3">
+          <div class="flex-1 relative">
+            <input
+              type="text"
+              id="userInput"
+              placeholder="Ask about phone recommendations..."
+              class="w-full px-4 py-3 rounded-lg border focus:outline-none focus:border-indigo-500 bg-gray-50"
+              autocomplete="off"
+            />
+          </div>
+          <button
+            onclick="sendMessage()"
+            class="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 flex items-center gap-2 whitespace-nowrap"
+          >
+            <i class="ri-send-plane-fill"></i>
+            Send
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // Get the query parameter from the URL
+      const params = new URLSearchParams(window.location.search);
+      const searchQuery = params.get("query");
+    
+      // Auto-fill the AI search box if a query exists
+      if (searchQuery) {
+        document.getElementById("userInput").value = searchQuery;
+      }
+    </script>
+    
+
+    <script>
+      async function getAIResponse(prompt) {
+        try {
+          const response = await fetch(
+            `/get-response?prompt=${encodeURIComponent(prompt)}`
+          );
+          if (!response.ok) throw new Error("Failed to get response");
+          return await response.text();
+        } catch (error) {
+          console.error("Error:", error);
+          return "⚠️ Sorry, I'm having trouble connecting to the AI service. Please try again later.";
+        }
+      }
+
+      // function formatResponse(text) {
+      //     return text
+      //         .replace(/🟢/g, '<span class="text-green-500 mr-1">🟢</span>')
+      //         .replace(/📸/g, '📸')
+      //         .replace(/⚡/g, '⚡')
+      //         .replace(/🚀/g, '🚀')
+      //         .replace(/🔋/g, '🔋')
+      //         .replace(/🏆/g, '🏆')
+      //         .replace(/💰/g, '💰')
+      //         .replace(/\n/g, '<br>')
+      //         .replace(/(•|✅|📌)/g, '<span class="mr-2">$1</span>')
+      //         .replace(/(\d+\.\s+)(.*?)(<br>|$)/g, '<span class="font-semibold text-indigo-600">$1</span>$2$3');
+      // }
+
+      function formatResponse(text) {
+        return text
+          .replace(/\*\*(.*?)\*\*/g, '<span class="highlight">$1</span>')
+          .replace(/🟢/g, '<span class="emoji">🟢</span>')
+          .replace(/📸/g, '<span class="emoji">📸</span>')
+          .replace(/⚡/g, '<span class="emoji">⚡</span>')
+          .replace(/🚀/g, '<span class="emoji">🚀</span>')
+          .replace(/🏆/g, '<span class="emoji">🏆</span>')
+          .replace(/🔋/g, '<span class="emoji">🔋</span>')
+          .replace(/💰/g, '<span class="emoji">💰</span>')
+          .replace(/\n/g, "<br>")
+          .replace(/\* (.*?)(<br>|$)/g, "• $1$2");
+      }
+      async function sendMessage() {
+        const userInput = document.getElementById("userInput");
+        const chatContainer = document.getElementById("chatContainer");
+        const prompt = userInput.value.trim();
+
+        if (!prompt) return;
+
+        // Add user message
+        const userMessage = document.createElement("div");
+        userMessage.className = "flex gap-4 mb-6 justify-end";
+        userMessage.innerHTML = `
+                <div class="bg-indigo-100 rounded-lg p-4 max-w-[80%]">
+                    <p class="text-gray-700">${prompt}</p>
+                </div>
+            `;
+        chatContainer.appendChild(userMessage);
+
+        // Add loading indicator
+        const loadingMessage = document.createElement("div");
+        loadingMessage.className = "flex gap-4 mb-6";
+        loadingMessage.innerHTML = `
+                <div class="w-8 h-8 flex-shrink-0 flex items-center justify-center bg-indigo-100 rounded-full">
+                    <i class="ri-robot-2-line text-indigo-600"></i>
+                </div>
+                <div class="bg-gray-100 rounded-lg p-4 max-w-[80%]">
+                    <p class="text-gray-500">Thinking <span class="loading-dots"></span></p>
+                </div>
+            `;
+        chatContainer.appendChild(loadingMessage);
+        chatContainer.scrollTop = chatContainer.scrollHeight;
+
+        try {
+          // Get AI response
+          const rawResponse = await getAIResponse(prompt);
+          const formattedResponse = formatResponse(rawResponse);
+
+          // Remove loading message
+          loadingMessage.remove();
+
+          // Add AI response
+          const aiMessage = document.createElement("div");
+          aiMessage.className = "flex gap-4 mb-6";
+          aiMessage.innerHTML = `
+                    <div class="w-8 h-8 flex-shrink-0 flex items-center justify-center bg-indigo-100 rounded-full">
+                        <i class="ri-robot-2-line text-indigo-600"></i>
+                    </div>
+                    <div class="bg-gray-100 rounded-lg p-4 max-w-[80%]">
+                        <p class="text-gray-800 whitespace-pre-line">${formattedResponse}</p>
+                    </div>
+                `;
+          chatContainer.appendChild(aiMessage);
+        } catch (error) {
+          loadingMessage.innerHTML = `
+                    <div class="w-8 h-8 flex-shrink-0 flex items-center justify-center bg-red-100 rounded-full">
+                        <i class="ri-error-warning-line text-red-600"></i>
+                    </div>
+                    <div class="bg-red-50 rounded-lg p-4 max-w-[80%]">
+                        <p class="text-red-600">⚠️ Error: ${error.message}</p>
+                    </div>
+                `;
+        }
+
+        userInput.value = "";
+        chatContainer.scrollTop = chatContainer.scrollHeight;
+      }
+
+      // Enter key handler
+      document.getElementById("userInput").addEventListener("keypress", (e) => {
+        if (e.key === "Enter" && !e.shiftKey) {
+          e.preventDefault();
+          sendMessage();
+        }
+      });
+    </script>
+  </body>
+</html>

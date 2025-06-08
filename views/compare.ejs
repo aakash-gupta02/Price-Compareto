@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PhonePlume - iPhone 15 Pro</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/remixicon@4.5.0/fonts/remixicon.css"
+      rel="stylesheet"
+    />
+    <style>
+      :where([class^="ri-"])::before {
+        content: "\f3c2";
+      }
+    </style>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              primary: "#6366f1",
+              secondary: "#4f46e5",
+            },
+            borderRadius: {
+              none: "0px",
+              sm: "4px",
+              DEFAULT: "8px",
+              md: "12px",
+              lg: "16px",
+              xl: "20px",
+              "2xl": "24px",
+              "3xl": "32px",
+              full: "9999px",
+              button: "8px",
+            },
+          },
+        },
+      };
+    </script>
+
+    <style>
+      /* Keyframes for the bubbling hearts animation */
+      @keyframes bubble {
+        0% {
+          transform: translateY(0) scale(0);
+          opacity: 1;
+        }
+        100% {
+          transform: translateY(-100vh) scale(1.5);
+          opacity: 0;
+        }
+      }
+
+      /* Heart styling */
+      .heart {
+        position: absolute;
+        bottom: 0;
+        left: 50%;
+        width: 40px; /* Adjust size as needed */
+        height: 40px; /* Adjust size as needed */
+        background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="red"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>');
+        background-size: contain;
+        background-repeat: no-repeat;
+        animation: bubble 2s ease-in-out forwards;
+      }
+    </style>
+  </head>
+
+  <body class="bg-white min-h-screen">
+    <nav
+      class="fixed top-0 left-0 right-0 bg-white/80 backdrop-blur-md z-50 border-b border-gray-100"
+    >
+      <div class="max-w-7xl mx-auto px-4">
+        <div class="flex items-center justify-between h-16">
+          <div class="flex items-center">
+            <a href="/home" class="text-2xl font-['Pacifico'] text-primary"
+              >Price Compareto</a
+            >
+          </div>
+          <div class="hidden md:flex items-center space-x-8">
+            <a href="/" class="text-gray-700 hover:text-primary">Home</a>
+            <a href="/ai" class="text-gray-700 hover:text-primary"
+              >AI Assisstant</a
+            >
+            <a href="/wishlist" class="wishlist-button">View Wishlist</a>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <div class="flex items-center justify-center mt-32">
+      <h1 class="text-7xl font-['Pacifico'] text-primary">Compare Prises...</h1>
+    </div>
+
+    <div class="px-28 mt-24">
+      <form class="flex mt-12 gap-4">
+        <input
+          id="searchInput"
+          autocomplete="off"
+          type="text"
+          placeholder="Enter Phone Name...."
+          class="flex-1 px-4 py-3 rounded-button border border-gray-400 focus:outline-none focus:border-primary"
+        />
+        <button
+          type="submit"
+          class="bg-primary text-white px-6 py-3 rounded-button hover:bg-primary/90 whitespace-nowrap"
+        >
+          Search
+        </button>
+      </form>
+    </div>
+
+    <main
+      id="phoneDetails"
+      class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12"
+    >
+      <div class="flex flex-col lg:flex-row gap-12">
+        <div class="leftside lg:w-2/5">
+          <div class="bg-secondary rounded-lg p-8 mb-4">
+            <img
+              src="https://public.readdy.ai/ai/img_res/b5b2231392ac9cac99b69899609a61b0.jpg"
+              alt="iPhone 15 Pro"
+              class="w-full h-auto object-cover rounded-lg"
+            />
+          </div>
+
+          <div class="flex justify-between">
+            <div class="flex items-center gap-2">
+              <div class="flex items-center">
+                <i class="ri-star-fill text-yellow-400"></i>
+                <span class="ml-1 text-gray-700">4.8</span>
+              </div>
+              <span class="text-gray-500">(256 reviews)</span>
+            </div>
+
+            <div
+              id="heartContainer"
+              class="fixed inset-0 pointer-events-none"
+            ></div>
+
+            <button
+              onclick="showNotification('Added to Wish List')"
+              id="likeButton"
+              class="wishlist-btn bg-primary text-white px-4 py-2 rounded-md hover:bg-red-600 transition"
+            >
+              Add to Wishlist
+            </button>
+          </div>
+        </div>
+
+        <div class="rightside lg:w-3/5">
+          <h1 class="text-4xl font-bold text-gray-900 mb-4">
+            <%= phone.name%>
+          </h1>
+          <p class="text-gray-600 mb-8"><%=phone.description %></p>
+
+          <!-- <div
+            class="best prices bg-white rounded-lg shadow-sm border p-6 mb-8"
+          >
+            <h2 class="text-xl font-semibold mb-6">Best Prices</h2>
+            <% phone.prices.forEach(price => { %>
+            <div class="flex items-center justify-between border-b pb-3">
+              <span class="text-gray-700 font-medium"><%= price.store%></span>
+              <div class="flex items-center gap-4">
+                <span class="text-primary font-semibold text-lg">
+                  ₹<%= ((price.price)*83).toLocaleString("en-IN") %></span
+                >
+                <a
+                  href="<%= price.link %>"
+                  target="_blank"
+                  class="bg-primary text-white px-4 py-2 rounded-md hover:bg-blue-700 transition"
+                >
+                  View Deal
+                </a>
+              </div>
+            </div>
+            <% }) %>
+          </div> -->
+
+          <div
+            class="best prices bg-white rounded-lg shadow-sm border p-6 mb-8"
+          >
+            <!-- <div>
+              <h2 class="text-xl font-semibold mb-6">Best Deal</h2>
+              <p class="text-gray-600">Lowest Price: <span class="text-primary font-semibold">₹<%= (Math.min(...phone.prices.map((p) => p.price)) * 83).toLocaleString("en-IN")
+              %></span></p>
+            </div> -->
+
+            <% const minPriceStore = phone.prices.sort((a, b) => a.price -
+            b.price)[0]; %>
+
+            <div
+              class="best-prices bg-white rounded-lg shadow-sm border p-6 mb-8"
+            >
+              <h2 class="text-xl font-semibold mb-6">Best Prices</h2>
+
+              <% phone.prices.forEach(price => { %> <% const isLowest =
+              price.price === minPriceStore.price; %>
+
+              <div class="flex items-center justify-between border-b pb-3">
+                <span
+                  class="text-gray-700 font-medium <% if (isLowest) { %> text-primary<% } else { %> text-gray-700 <% } %>"
+                  ><%= price.store %></span
+                >
+
+                <div class="flex items-center gap-4">
+                  <span
+                    class="font-semibold text-lg <% if (isLowest) { %> text-primary<% } else { %> text-gray-700 <% } %>"
+                  >
+                    ₹<%= (price.price * 83).toLocaleString("en-IN") %>
+                  </span>
+
+                  <a
+                    href="<%= price.link %>"
+                    target="_blank"
+                    class="px-4 py-2 rounded-md transition 
+                    <% if (isLowest) { %> bg-primary text-white hover:bg-green-700 <% } else { %> bg-gray-700/70 text-white hover:bg-red-700 <% } %>"
+                  >
+                    View Deal
+                  </a>
+                </div>
+              </div>
+              <% }) %>
+            </div>
+          </div>
+
+          <div class="specs bg-white rounded-lg shadow-sm border p-6">
+            <h2 class="text-xl font-semibold mb-6">Specifications</h2>
+            <div class="grid grid-cols-2 gap-6">
+              <div>
+                <h3 class="text-gray-500 text-sm mb-1">Screen</h3>
+                <p class="text-gray-900 font-medium">
+                  <%= phone.specifications.Screen %>
+                </p>
+              </div>
+              <div>
+                <h3 class="text-gray-500 text-sm mb-1">Processor</h3>
+                <p class="text-gray-900 font-medium">
+                  <%=phone.specifications.Processor %>
+                </p>
+              </div>
+              <div>
+                <h3 class="text-gray-500 text-sm mb-1">Camera</h3>
+                <p class="text-gray-900 font-medium">
+                  <%= phone.specifications.Camera %>
+                </p>
+              </div>
+              <div>
+                <h3 class="text-gray-500 text-sm mb-1">Battery</h3>
+                <p class="text-gray-900 font-medium">
+                  <%= phone.specifications.Battery %>
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Notification -->
+      <div
+        id="notification"
+        class="fixed bottom-[100px] right-4 max-w-sm bg-white rounded-lg shadow-lg p-4 transform translate-x-full transition-transform duration-300"
+      >
+        <div class="flex items-center">
+          <i class="ri-checkbox-circle-line text-green-500 text-xl mr-3"></i>
+          <p id="notification-message" class="text-gray-800"></p>
+        </div>
+      </div>
+    </main>
+
+    <script src="phoneData.js"></script>
+
+    <script>
+      const likeButton = document.getElementById("likeButton");
+      const heartContainer = document.getElementById("heartContainer");
+      andomLeft = Math.random() * 100;
+
+      //add to wish list is above.....
+      function addToWishlist(phoneId) {
+        // Ensure phoneData is properly structured
+        if (
+          typeof phoneData === "undefined" ||
+          !Array.isArray(phoneData.phones)
+        ) {
+          console.error("phoneData.phones is not defined or is not an array.");
+          return;
+        }
+
+        let wishlist = JSON.parse(localStorage.getItem("wishlist")) || [];
+
+        // Find the phone inside phoneData.phones
+        let phone = phoneData.phones.find((p) => p.id === phoneId);
+
+        if (!phone) {
+          console.error("Phone data not found for ID:", phoneId);
+          return;
+        }
+
+        if (wishlist.some((p) => p.id === phoneId)) {
+          alert("Already in Wishlist!");
+          return;
+        }
+
+        wishlist.push(phone);
+        localStorage.setItem("wishlist", JSON.stringify(wishlist));
+        alert("Added to Wishlist!");
+
+        function showNotification(message) {
+          const notification = document.getElementById("notification");
+          const messageElement = document.getElementById(
+            "notification-message"
+          );
+          messageElement.textContent = message;
+          notification.style.transform = "translateX(0)";
+          setTimeout(() => {
+            notification.style.transform = "translateX(100%)";
+          }, 3000);
+        }
+      }
+
+      function createHearts() {
+        // console.log("createHearts function called!"); // Debugging
+
+        const heartContainer = document.getElementById("heartContainer");
+        if (!heartContainer) {
+          console.error("heartContainer not found!");
+          return;
+        }
+
+        const heartCount = 10;
+
+        for (let i = 0; i < heartCount; i++) {
+          const heart = document.createElement("div");
+          heart.classList.add("heart");
+
+          // Randomize the horizontal position
+          const randomLeft = Math.random() * 100;
+          heart.style.left = `${randomLeft}%`;
+
+          // Randomize the animation duration and delay
+          const randomDuration = Math.random() * 2 + 1; // 1s to 3s
+          const randomDelay = Math.random() * 1; // 0s to 1s
+          heart.style.animationDuration = `${randomDuration}s`;
+          heart.style.animationDelay = `${randomDelay}s`;
+
+          // Add the heart to the container
+          heartContainer.appendChild(heart);
+
+          // Remove the heart after the animation ends
+          heart.addEventListener("animationend", () => {
+            heart.remove();
+          });
+        }
+      }
+
+      // Function to re-attach the event listener for the like button
+      function attachLikeButtonListener() {
+        const likeButton = document.getElementById("likeButton");
+        // console.log("likeButton:", likeButton); // Debugging
+
+        if (likeButton) {
+          // console.log("likeButton found, attaching event listener..."); // Debugging
+          likeButton.addEventListener("click", (e) => {
+            // console.log("Event listener fired!"); // Debugging
+            e.preventDefault(); // Prevent default button behavior
+            // console.log("Like button clicked!"); // Debugging
+            createHearts(); // Call the createHearts function
+          });
+        } else {
+          console.error("likeButton not found!"); // Debugging
+        }
+      }
+
+      document.addEventListener("DOMContentLoaded", function () {
+        const searchForm = document.querySelector("form");
+        const searchInput = document.getElementById("searchInput");
+        const phoneDetails = document.getElementById("phoneDetails");
+        const suggestionsContainer = document.createElement("div");
+        suggestionsContainer.classList.add(
+          "absolute",
+          "bg-white",
+          "shadow-lg",
+          "rounded-md",
+          "w-full",
+          "z-10"
+        );
+        searchInput.parentNode.appendChild(suggestionsContainer);
+
+        const brandImages = {
+          Samsung:
+            "https://www.designinfo.in/wp-content/uploads/2024/01/Samsung-Galaxy-S24-Ultra-256GB-Titanium-Violet-3.webp",
+          Apple:
+            "https://m.media-amazon.com/images/I/619f09kK7tL._AC_UF1000,1000_QL80_.jpg",
+          Google:
+            "https://rukminim2.flixcart.com/image/850/1000/xif0q/mobile/d/y/m/pixel-9-ga05843-in-google-original-imah3pfgd9zadkyx.jpeg?q=90&crop=false",
+
+          OnePlus:
+            "https://rukminim2.flixcart.com/image/850/1000/xif0q/mobile/z/i/u/10-pro-5g-ne2211-bv-3-old-oneplus-original-imah4qp5kyyg2qgp.jpeg?q=90&crop=false",
+          Xiaomi: "",
+
+          Oppo: "https://m.media-amazon.com/images/I/81Ww9bOGRfL._AC_UF1000,1000_QL80_.jpg",
+
+          Vivo: "https://rukminim2.flixcart.com/image/850/1000/xif0q/mobile/p/k/w/-original-imagz6tzsqekf2mg.jpeg?q=90&crop=false",
+
+          Realme:
+            "https://m.media-amazon.com/images/I/51Jx33Kl0FL._AC_UF1000,1000_QL80_.jpg",
+
+          Asus: "https://28mobile.com/cdn/shop/products/rog-phone-7-ultimate@2x.jpg?v=1682165739",
+
+          Nothing: "https://m.media-amazon.com/images/I/71SgrNQOEqL.jpg",
+          Xiaomi:
+            "https://5.imimg.com/data5/SELLER/Default/2022/7/LQ/OZ/YP/155979352/xiaomi-mi-11-0-2oz-128gb-256gb-new-dual-sim-6-81-smartphone-phone-telephoneeoi-500x500.jpg",
+        };
+
+        const phones = phoneData.phones;
+
+        // Prevent form reload
+        searchForm.addEventListener("submit", function (event) {
+          event.preventDefault();
+          const searchTerm = searchInput.value.trim();
+          if (searchTerm) {
+            const foundPhone = phones.find((phone) =>
+              phone.name.toLowerCase().includes(searchTerm.toLowerCase())
+            );
+            if (foundPhone) {
+              renderPhone(foundPhone);
+              updateURLQuery(foundPhone.name);
+            } else {
+              phoneDetails.innerHTML = `<p class="text-center text-gray-500 text-xl">No phone found</p>`;
+            }
+          }
+        });
+
+        function renderPhone(phone) {
+          const brandImage = brandImages[phone.brand];
+
+          // Find the lowest price
+          const minPrice = Math.min(...phone.prices.map((p) => p.price));
+
+          phoneDetails.innerHTML = `
+        <div class="flex flex-col lg:flex-row gap-12">
+              <div class="leftside lg:w-2/5">
+          <div class="bg-white rounded-lg p-8 mb-4">
+            <img
+              src="${brandImage}"
+              alt="iPhone 15 Pro"
+              class="w-full h-auto object-cover rounded-lg"
+            />
+          </div>
+
+          <div class="flex justify-between">
+          <div class="flex items-center gap-2">
+            <div class="flex items-center">
+              <i class="ri-star-fill text-yellow-400"></i>
+              <span class="ml-1 text-gray-700">${phone.rating}</span>
+            </div>
+            <span class="text-gray-500">(${phone.reviews} reviews)</span>
+          </div>
+
+            <!-- Container for the hearts -->
+            <div id="heartContainer" class="fixed inset-0 pointer-events-none">
+             </div>
+
+           <button id="likeButton" class="wishlist-btn bg-primary text-white px-4 py-2 rounded-md hover:bg-red-700 transition" 
+        onclick="addToWishlist(${phone.id}); createHearts();">
+        Add to Wishlist
+        </button></div>
+
+        </div>
+
+
+          <div class="rightside lg:w-3/5">
+            <h1 class="text-4xl font-bold text-gray-900 mb-4">${phone.name}</h1>
+            <p class="text-gray-600 mb-8">${phone.description}</p>
+    
+         <div class="best-prices bg-white rounded-lg shadow-sm border p-6 mb-8">
+    <h2 class="text-xl font-semibold mb-6">Best Prices</h2>
+    ${phone.prices
+      .map((price) => {
+        const isLowest = price.price === minPrice;
+        return `
+        <div class="flex items-center justify-between border-b pb-3 
+          ${
+            isLowest
+              ? "text-primary rounded-md"
+              : "bg-white text-gray-700"
+          }">
+          
+          <span class="font-medium">${price.store}</span>
+          
+          <div class="flex items-center gap-4">
+            <span class="font-semibold text-lg ${
+              isLowest ? "text-primary" : "text-gray-700"
+            }">
+              ₹${(price.price * 83).toLocaleString("en-IN")}
+            </span>
+            
+            <a href="${price.link}" target="_blank"
+              class="px-4 py-2 rounded-md transition 
+              ${
+                isLowest
+                  ? "bg-primary text-white hover:bg-green-700"
+                  : "bg-gray-700/70 text-white hover:bg-red-700"
+              }
+               ${
+                isLowest
+                  ? "bg-primary text-white hover:bg-green-700"
+                  : "bg-gray-700/70 text-white hover:bg-red-700"
+              }    
+              
+              ">
+              View Deal
+            </a>
+          </div>
+        </div>`;
+      })
+      .join("")}
+  </div>
+    
+            <div class="specs bg-white rounded-lg shadow-sm border p-6">
+              <h2 class="text-xl font-semibold mb-6">Specifications</h2>
+              <div class="grid grid-cols-2 gap-6">
+                <div><h3 class="text-gray-500 text-sm mb-1">Screen</h3><p class="text-gray-900 font-medium">${
+                  phone.specifications.Screen
+                }</p></div>
+                <div><h3 class="text-gray-500 text-sm mb-1">Processor</h3><p class="text-gray-900 font-medium">${
+                  phone.specifications.Processor
+                }</p></div>
+                <div><h3 class="text-gray-500 text-sm mb-1">Camera</h3><p class="text-gray-900 font-medium">${
+                  phone.specifications.Camera
+                }</p></div>
+                <div><h3 class="text-gray-500 text-sm mb-1">Battery</h3><p class="text-gray-900 font-medium">${
+                  phone.specifications.Battery
+                }</p></div>
+              </div>
+            </div>
+          </div>
+          </div>
+        `;
+          attachLikeButtonListener();
+        }
+
+        function updateSuggestions(query) {
+          suggestionsContainer.innerHTML = "";
+          if (!query) return;
+
+          const filteredPhones = phones.filter((phone) =>
+            phone.name.toLowerCase().includes(query.toLowerCase())
+          );
+
+          if (filteredPhones.length === 0) {
+            suggestionsContainer.innerHTML = `<p class="text-gray-500 p-2">No results found</p>`;
+            return;
+          }
+
+          function addToHistory(phone) {
+            let history = JSON.parse(localStorage.getItem("history")) || [];
+
+            // Prevent duplicates and keep only the latest 10 entries
+            history = [
+              phone,
+              ...history.filter((p) => p.id !== phone.id),
+            ].slice(0, 20);
+
+            console.log("history");
+
+            localStorage.setItem("history", JSON.stringify(history));
+          }
+
+          filteredPhones.forEach((phone) => {
+            const suggestion = document.createElement("div");
+            suggestion.textContent = phone.name;
+            suggestion.classList.add(
+              "p-2",
+              "cursor-pointer",
+              "hover:bg-gray-200"
+            );
+            suggestion.addEventListener("click", function () {
+              searchInput.value = phone.name;
+              suggestionsContainer.innerHTML = "";
+              renderPhone(phone);
+              updateURLQuery(phone.name);
+              addToHistory(phone);
+            });
+            suggestionsContainer.appendChild(suggestion);
+          });
+        }
+
+        searchInput.addEventListener("input", function () {
+          updateSuggestions(searchInput.value);
+        });
+
+        document.addEventListener("click", function (e) {
+          if (
+            !searchInput.contains(e.target) &&
+            !suggestionsContainer.contains(e.target)
+          ) {
+            suggestionsContainer.innerHTML = "";
+          }
+        });
+
+        function updateURLQuery(phoneName) {
+          const url = new URL(window.location);
+          url.searchParams.set("phone", phoneName);
+          window.history.pushState({}, "", url);
+        }
+
+        function loadPhoneFromURL() {
+          const urlParams = new URLSearchParams(window.location.search);
+          const phoneName = urlParams.get("phone");
+          if (phoneName) {
+            const foundPhone = phones.find((phone) => phone.name === phoneName);
+            if (foundPhone) {
+              renderPhone(foundPhone);
+            }
+          }
+        }
+
+        loadPhoneFromURL();
+
+        const compareLinks = document.querySelectorAll(".compare-link");
+        compareLinks.forEach((link) => {
+          link.addEventListener("click", function (e) {
+            e.preventDefault();
+            const phoneName = this.getAttribute("data-phone");
+            const selectedPhone = phones.find(
+              (phone) => phone.name === phoneName
+            );
+
+            if (selectedPhone) {
+              renderPhone(selectedPhone);
+              updateURLQuery(phoneName);
+            }
+          });
+        });
+      });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Phone Store</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/remixicon@4.5.0/fonts/remixicon.css"
+      rel="stylesheet"
+    />
+    <style>
+      :where([class^="ri-"])::before {
+        content: "\f3c2";
+      }
+      input[type="number"]::-webkit-inner-spin-button,
+      input[type="number"]::-webkit-outer-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+      }
+    </style>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              primary: "#4F46E5",
+              secondary: "#6366F1",
+            },
+            borderRadius: {
+              none: "0px",
+              sm: "4px",
+              DEFAULT: "8px",
+              md: "12px",
+              lg: "16px",
+              xl: "20px",
+              "2xl": "24px",
+              "3xl": "32px",
+              full: "9999px",
+              button: "8px",
+            },
+          },
+        },
+      };
+    </script>
+  </head>
+  <body class="bg-gray-50 min-h-screen">
+    <header class="bg-white shadow-sm fixed w-full top-0 z-50">
+      <div
+        class="container mx-auto px-4 py-4 flex items-center justify-between"
+      >
+        <a href="#" class="text-2xl font-['Pacifico'] text-primary"
+          >Price Compareto</a
+        >
+
+        <div class="flex-1 max-w-2xl mx-8">
+          <form class="flex gap-4" id="searchForm">
+            <input
+              id="searchInput"
+              autocomplete="off"
+              type="text"
+              placeholder="Enter Phone Name...."
+              class="flex-1 px-4 py-3 rounded-button border border-gray-400 focus:outline-none focus:border-primary"
+            />
+            <button
+              type="submit"
+              class="bg-primary text-white px-6 py-3 rounded-button hover:bg-primary/90 whitespace-nowrap"
+            >
+              Search
+            </button>
+          </form>
+          <div
+            id="suggestionsContainer"
+            class="absolute bg-white shadow-lg rounded-md w-full z-10"
+          ></div>
+        </div>
+      </div>
+    </header>
+
+    <main class="container mx-auto px-4 pt-24 pb-8">
+      <!-- phone -->
+      <div
+        id="productGrid"
+        class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
+      ></div>
+
+      <!-- pagination -->
+      <div class="mt-8 flex items-center justify-between">
+        <div class="flex items-center gap-2">
+          <span class="text-sm text-gray-600">Show:</span>
+          <select id="perPage" class="border rounded-button px-2 py-1 text-sm">
+            <option value="12">12</option>
+            <option value="24">24</option>
+            <option value="36">36</option>
+          </select>
+        </div>
+
+        <div class="flex items-center gap-2">
+          <button
+            id="prevPage"
+            class="px-4 py-2 border rounded-button text-sm flex items-center gap-1 disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            <i class="ri-arrow-left-s-line"></i>
+            Previous
+          </button>
+          <div class="flex items-center gap-1">
+            <span
+              id="currentPage"
+              class="px-3 py-1 bg-primary text-white rounded-button text-sm"
+              >1</span
+            >
+            <span class="text-sm text-gray-600">of</span>
+            <span id="totalPages" class="text-sm text-gray-600">5</span>
+          </div>
+          <button
+            id="nextPage"
+            class="px-4 py-2 border rounded-button text-sm flex items-center gap-1"
+          >
+            Next
+            <i class="ri-arrow-right-s-line"></i>
+          </button>
+        </div>
+      </div>
+    </main>
+
+    <div
+      id="cartModal"
+      class="hidden fixed inset-0 bg-black bg-opacity-50 z-50"
+    >
+      <div class="absolute right-0 top-0 h-full w-96 bg-white shadow-lg">
+        <div class="p-4 border-b flex justify-between items-center">
+          <h3 class="text-lg font-semibold">Shopping Cart</h3>
+          <button
+            id="closeCart"
+            class="w-8 h-8 flex items-center justify-center"
+          >
+            <i class="ri-close-line"></i>
+          </button>
+        </div>
+        <div
+          id="cartItems"
+          class="p-4 space-y-4 overflow-y-auto"
+          style="height: calc(100% - 140px)"
+        ></div>
+        <div class="absolute bottom-0 left-0 w-full p-4 border-t bg-white">
+          <div class="flex justify-between items-center mb-4">
+            <span class="font-semibold">Total:</span>
+            <span id="cartTotal" class="text-lg font-bold">$0.00</span>
+          </div>
+          <button class="w-full bg-primary text-white py-2 rounded-button">
+            Checkout
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <script src="phoneData.js"></script>
+
+    <!-- <script>
+      const searchForm = document.querySelector("form");
+      const suggestionsContainer = document.createElement("div");
+      const searchInput = document.getElementById("searchInput");
+      suggestionsContainer.classList.add(
+        "absolute",
+        "bg-white",
+        "shadow-lg",
+        "rounded-md",
+        "w-full",
+        "z-10"
+      );
+      searchInput.parentNode.appendChild(suggestionsContainer);
+
+           // Prevent form reload
+           searchForm.addEventListener("submit", function (event) {
+          event.preventDefault();
+          const searchTerm = searchInput.value.trim();
+          if (searchTerm) {
+            const foundPhone = phones.find((phone) =>
+              phone.name.toLowerCase().includes(searchTerm.toLowerCase())
+            );
+            if (foundPhone) {
+              renderPhone(foundPhone);
+              updateURLQuery(foundPhone.name);
+            } else {
+              phoneDetails.innerHTML = `<p class="text-center text-gray-500 text-xl">No phone found</p>`;
+            }
+          }
+        });
+
+
+      const brandImages = {
+        Samsung:
+          "https://www.designinfo.in/wp-content/uploads/2024/01/Samsung-Galaxy-S24-Ultra-256GB-Titanium-Violet-3.webp",
+        Apple:
+          "https://m.media-amazon.com/images/I/619f09kK7tL._AC_UF1000,1000_QL80_.jpg",
+        Google:
+          "https://rukminim2.flixcart.com/image/850/1000/xif0q/mobile/d/y/m/pixel-9-ga05843-in-google-original-imah3pfgd9zadkyx.jpeg?q=90&crop=false",
+
+        OnePlus:
+          "https://rukminim2.flixcart.com/image/850/1000/xif0q/mobile/z/i/u/10-pro-5g-ne2211-bv-3-old-oneplus-original-imah4qp5kyyg2qgp.jpeg?q=90&crop=false",
+        Xiaomi: "",
+
+        Oppo: "https://m.media-amazon.com/images/I/81Ww9bOGRfL._AC_UF1000,1000_QL80_.jpg",
+
+        Vivo: "https://rukminim2.flixcart.com/image/850/1000/xif0q/mobile/p/k/w/-original-imagz6tzsqekf2mg.jpeg?q=90&crop=false",
+
+        Realme:
+          "https://m.media-amazon.com/images/I/51Jx33Kl0FL._AC_UF1000,1000_QL80_.jpg",
+
+        Asus: "https://28mobile.com/cdn/shop/products/rog-phone-7-ultimate@2x.jpg?v=1682165739",
+
+        Nothing: "https://m.media-amazon.com/images/I/71SgrNQOEqL.jpg",
+        Redmi:
+          "https://m.media-amazon.com/images/I/41azS4pD-mL._AC_UF1000,1000_QL80_.jpg",
+        Xiaomi:
+          "https://5.imimg.com/data5/SELLER/Default/2022/7/LQ/OZ/YP/155979352/xiaomi-mi-11-0-2oz-128gb-256gb-new-dual-sim-6-81-smartphone-phone-telephoneeoi-500x500.jpg",
+      };
+
+      const mockProducts = phoneData.phones;
+      console.log(mockProducts);
+
+      let cart = [];
+      let currentPage = 1;
+      const itemsPerPage = 12;
+
+      function renderProducts() {
+        const brandImage = brandImages[mockProducts.brand];
+
+        const grid = document.getElementById("productGrid");
+        grid.innerHTML = "";
+
+        mockProducts.forEach((product) => {
+          const card = document.createElement("div");
+          card.className =
+            "bg-white rounded-lg shadow-md overflow-hidden transition-transform hover:scale-[1.03]";
+          card.innerHTML = `
+                    <div class="aspect-square overflow-hidden p-12 rounded-md">
+                        <img src="${
+                          brandImage || brandImages[product.brand]
+                        }" alt="${product.name}" class="object-cover">
+                    </div>
+                    <div class="p-4">
+                        <h3 class="font-semibold text-lg mb-1">${
+                          product.name
+                        }</h3>
+
+                            <div class="text-sm text-gray-600 mb-3">
+                  <p> ${product.specifications.Camera} • ${
+            product.specifications.Processor
+          }</p>
+                  <p>${product.specifications.Screen}</p>
+                </div>
+                        <div class="flex items-center gap-2">
+            <div class="flex items-center">
+              <i class="ri-star-fill text-yellow-400"></i>
+              <span class="ml-1 text-gray-700">${product.rating}</span>
+            </div>
+            
+          </div>
+                        <div class="flex items-center mt-4 justify-between">
+                            <span class="text-primary font-semibold">$${Math.min(
+                              ...product.prices.map((p) => p.price)
+                            )}</span>
+                    <a href="/compare?phone=${product.name}">
+                    <button class="px-4 py-2 text-sm text-primary border border-primary rounded-button hover:bg-primary/5">
+                      Compare Prices
+                    </button></a>
+                        </div>
+                    </div>
+                `;
+          grid.appendChild(card);
+        });
+      }
+
+      
+      function updateSuggestions(query) {
+          suggestionsContainer.innerHTML = "";
+          if (!query) return;
+
+          const filteredPhones = phones.filter((phone) =>
+            phone.name.toLowerCase().includes(query.toLowerCase())
+          );
+
+          if (filteredPhones.length === 0) {
+            suggestionsContainer.innerHTML = `<p class="text-gray-500 p-2">No results found</p>`;
+            return;
+          }
+
+
+          function addToHistory(phone) {
+    let history = JSON.parse(localStorage.getItem("history")) || [];
+
+    // Prevent duplicates and keep only the latest 10 entries
+    history = [phone, ...history.filter(p => p.id !== phone.id)].slice(0, 20);
+
+    console.log("history");
+    
+    localStorage.setItem("history", JSON.stringify(history));
+}
+
+
+          filteredPhones.forEach((phone) => {
+            const suggestion = document.createElement("div");
+            suggestion.textContent = phone.name;
+            suggestion.classList.add(
+              "p-2",
+              "cursor-pointer",
+              "hover:bg-gray-200"
+            );
+            suggestion.addEventListener("click", function () {
+              searchInput.value = phone.name;
+              suggestionsContainer.innerHTML = "";
+              renderPhone(phone);
+              // updateURLQuery(phone.name);
+              addToHistory(phone)
+            });
+            suggestionsContainer.appendChild(suggestion);
+          });
+        }
+
+        searchInput.addEventListener("input", function () {
+          updateSuggestions(searchInput.value);
+        });
+
+        document.addEventListener("click", function (e) {
+          if (
+            !searchInput.contains(e.target) &&
+            !suggestionsContainer.contains(e.target)
+          ) {
+            suggestionsContainer.innerHTML = "";
+          }
+        });
+
+
+
+      renderProducts();
+    </script> -->
+
+    <script>
+      const brandImages = {
+        Samsung:
+          "https://www.designinfo.in/wp-content/uploads/2024/01/Samsung-Galaxy-S24-Ultra-256GB-Titanium-Violet-3.webp",
+        Apple:
+          "https://m.media-amazon.com/images/I/619f09kK7tL._AC_UF1000,1000_QL80_.jpg",
+        Google:
+          "https://rukminim2.flixcart.com/image/850/1000/xif0q/mobile/d/y/m/pixel-9-ga05843-in-google-original-imah3pfgd9zadkyx.jpeg?q=90&crop=false",
+
+        OnePlus:
+          "https://rukminim2.flixcart.com/image/850/1000/xif0q/mobile/z/i/u/10-pro-5g-ne2211-bv-3-old-oneplus-original-imah4qp5kyyg2qgp.jpeg?q=90&crop=false",
+        Xiaomi: "",
+
+        Oppo: "https://m.media-amazon.com/images/I/81Ww9bOGRfL._AC_UF1000,1000_QL80_.jpg",
+
+        Vivo: "https://rukminim2.flixcart.com/image/850/1000/xif0q/mobile/p/k/w/-original-imagz6tzsqekf2mg.jpeg?q=90&crop=false",
+
+        Realme:
+          "https://m.media-amazon.com/images/I/51Jx33Kl0FL._AC_UF1000,1000_QL80_.jpg",
+
+        Asus: "https://28mobile.com/cdn/shop/products/rog-phone-7-ultimate@2x.jpg?v=1682165739",
+
+        Nothing: "https://m.media-amazon.com/images/I/71SgrNQOEqL.jpg",
+        Redmi:
+          "https://m.media-amazon.com/images/I/41azS4pD-mL._AC_UF1000,1000_QL80_.jpg",
+        Xiaomi:
+          "https://5.imimg.com/data5/SELLER/Default/2022/7/LQ/OZ/YP/155979352/xiaomi-mi-11-0-2oz-128gb-256gb-new-dual-sim-6-81-smartphone-phone-telephoneeoi-500x500.jpg",
+      };
+
+      const mockProducts = phoneData.phones;
+      // const searchForm = document.querySelector("form");
+      // const searchInput = document.getElementById("searchInput");
+      // const suggestionsContainer = document.createElement("div");
+      // suggestionsContainer.classList.add(
+      //   "absolute",
+      //   "bg-white",
+      //   "shadow-lg",
+      //   "rounded-md",
+      //   "w-full",
+      //   "z-10"
+      // );
+      // searchInput.parentNode.appendChild(suggestionsContainer);
+
+      // // Prevent form reload
+      // searchForm.addEventListener("submit", function (event) {
+      //   event.preventDefault();
+      //   const searchTerm = searchInput.value.trim();
+      //   if (searchTerm) {
+      //     const filteredProducts = mockProducts.filter((product) =>
+      //       product.name.toLowerCase().includes(searchTerm.toLowerCase())
+      //     );
+      //     renderProducts(filteredProducts); // Render filtered products
+      //   }
+      // });
+
+      // // Update suggestions as the user types
+      // searchInput.addEventListener("input", function () {
+      //   const query = searchInput.value.trim();
+      //   updateSuggestions(query);
+      // });
+
+      // // Hide suggestions when clicking outside
+      // document.addEventListener("click", function (e) {
+      //   if (
+      //     !searchInput.contains(e.target) &&
+      //     !suggestionsContainer.contains(e.target)
+      //   ) {
+      //     suggestionsContainer.innerHTML = "";
+      //   }
+      // });
+
+      // // Function to update search suggestions
+      // function updateSuggestions(query) {
+      //   suggestionsContainer.innerHTML = "";
+      //   if (!query) return;
+
+      //   const filteredPhones = mockProducts.filter((product) =>
+      //     product.name.toLowerCase().includes(query.toLowerCase())
+      //   );
+
+      //   if (filteredPhones.length === 0) {
+      //     suggestionsContainer.innerHTML = `<p class="text-gray-500 p-2">No results found</p>`;
+      //     return;
+      //   }
+
+      //   filteredPhones.forEach((product) => {
+      //     const suggestion = document.createElement("div");
+      //     suggestion.textContent = product.name;
+      //     suggestion.classList.add(
+      //       "p-2",
+      //       "cursor-pointer",
+      //       "hover:bg-gray-200"
+      //     );
+      //     suggestion.addEventListener("click", function () {
+      //       searchInput.value = product.name;
+      //       suggestionsContainer.innerHTML = "";
+      //       const filteredProducts = mockProducts.filter((p) =>
+      //         p.name.toLowerCase().includes(product.name.toLowerCase())
+      //       );
+      //       renderProducts(filteredProducts); // Render products matching the clicked suggestion
+      //     });
+      //     suggestionsContainer.appendChild(suggestion);
+      //   });
+      // }
+
+      // Function to render products
+
+      const searchForm = document.getElementById("searchForm");
+      const searchInput = document.getElementById("searchInput");
+      const suggestionsContainer = document.getElementById(
+        "suggestionsContainer"
+      );
+      const productGrid = document.getElementById("productGrid");
+
+      // Ensure phoneData is loaded
+      // console.log("Loaded Phone Data:", phoneData.phones);
+
+      searchForm.addEventListener("submit", function (event) {
+        event.preventDefault();
+        const searchTerm = searchInput.value.trim().toLowerCase();
+
+        if (searchTerm) {
+          const filteredProducts = phoneData.phones.filter((product) =>
+            product.name.toLowerCase().includes(searchTerm)
+          );
+
+          console.log("Filtered Products:", filteredProducts); // Debugging
+
+          console.log("Filtered Products to Render:", filteredProducts);
+
+          renderProducts(filteredProducts);
+        }
+      });
+
+      searchInput.addEventListener("input", function () {
+        const query = searchInput.value.trim().toLowerCase();
+        updateSuggestions(query);
+      });
+
+      function updateSuggestions(query) {
+        suggestionsContainer.innerHTML = "";
+        if (!query) return;
+
+        const filteredPhones = phoneData.phones.filter((product) =>
+          product.name.toLowerCase().includes(query)
+        );
+
+        if (filteredPhones.length === 0) {
+          suggestionsContainer.innerHTML = `<p class="text-gray-500 p-2">No results found</p>`;
+          return;
+        }
+
+        filteredPhones.forEach((product) => {
+          const suggestion = document.createElement("div");
+          suggestion.textContent = product.name;
+          suggestion.classList.add(
+            "p-2",
+            "cursor-pointer",
+            "hover:bg-gray-200"
+          );
+
+          suggestion.addEventListener("click", function () {
+            searchInput.value = product.name;
+            suggestionsContainer.innerHTML = "";
+            renderProducts([product]);
+          });
+
+          suggestionsContainer.appendChild(suggestion);
+        });
+      }
+
+      // Render products dynamically
+      function renderProducts(products) {
+        console.log("Rendering Products:", products); // Debugging
+        productGrid.innerHTML = "";
+
+        if (products.length === 0) {
+          productGrid.innerHTML =
+            "<p class='text-gray-500'>No matching phones found.</p>";
+          return;
+        }
+
+        products.forEach((product) => {
+          const card = document.createElement("div");
+          card.className =
+            "bg-white rounded-lg shadow-md overflow-hidden transition-transform hover:scale-[1.03]";
+          card.innerHTML = `
+      <div class="aspect-square overflow-hidden p-12 rounded-md">
+        <img src="${brandImages[product.brand] || "default-image-url.jpg"}" 
+             alt="${product.name}" class="object-cover">
+      </div>
+      <div class="p-4">
+        <h3 class="font-semibold text-lg mb-1">${product.name}</h3>
+        <div class="text-sm text-gray-600 mb-3">
+          <p>${product.specifications?.Camera || "N/A"} • ${
+            product.specifications?.Processor || "N/A"
+          }</p>
+          <p>${product.specifications?.Screen || "N/A"}</p>
+        </div>
+        <div class="flex items-center gap-2">
+          <div class="flex items-center">
+            <i class="ri-star-fill text-yellow-400"></i>
+            <span class="ml-1 text-gray-700">${product.rating || "N/A"}</span>
+          </div>
+        </div>
+        <div class="flex items-center mt-4 justify-between">
+          <span class="text-primary font-semibold">$${
+            product.prices?.[0]?.price || "N/A"
+          }</span>
+          <a href="/compare?phone=${product.name}">
+            <button class="px-4 py-2 text-sm text-primary border border-primary rounded-button hover:bg-primary/5">
+              Compare Prices
+            </button>
+          </a>
+        </div>
+      </div>
+    `;
+
+          console.log("Generated Card:", card); // Debugging
+          productGrid.appendChild(card);
+        });
+      }
+
+      // Initial render
+      renderProducts(phoneData.phones);
+
+      function renderProducts() {
+        const grid = document.getElementById("productGrid");
+        grid.innerHTML = "";
+
+        const productsArray = Array.isArray(mockProducts)
+          ? mockProducts
+          : [mockProducts];
+
+        productsArray.forEach((product) => {
+          const card = document.createElement("div");
+          card.className =
+            "bg-white rounded-lg shadow-md overflow-hidden transition-transform hover:scale-[1.03]";
+          card.innerHTML = `
+            <div class="aspect-square overflow-hidden p-12 rounded-md">
+              <img src="${
+                brandImages[product.brand] || "default-image-url.jpg"
+              }" alt="${product.name}" class="object-cover">
+            </div>
+            <div class="p-4">
+              <h3 class="font-semibold text-lg mb-1">${product.name}</h3>
+              <div class="text-sm text-gray-600 mb-3">
+                <p>${product.specifications.Camera} • ${
+            product.specifications.Processor
+          }</p>
+                <p>${product.specifications.Screen}</p>
+              </div>
+              <div class="flex items-center gap-2">
+                <div class="flex items-center">
+                  <i class="ri-star-fill text-yellow-400"></i>
+                  <span class="ml-1 text-gray-700">${product.rating}</span>
+                </div>
+              </div>
+              <div class="flex items-center mt-4 justify-between">
+                <span class="text-primary font-semibold">$${Math.min(
+                  ...product.prices.map((p) => p.price)
+                )}</span>
+                <a href="/compare?phone=${product.name}">
+                  <button class="px-4 py-2 text-sm text-primary border border-primary rounded-button hover:bg-primary/5">
+                    Compare Prices
+                  </button>
+                </a>
+              </div>
+            </div>
+          `;
+
+
+
+          grid.appendChild(card);
+        });
+      }
+
+      // Initial render of all products
+
+      // console.log("Product Grid Element:", productGrid);
+
+      renderProducts();
+    </script>
+  </body>
+</html>

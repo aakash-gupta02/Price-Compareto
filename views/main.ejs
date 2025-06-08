@@ -1,0 +1,955 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+<link rel="icon" type="image/png" href="/favicon_io/android-chrome-512x512.png">
+<link rel="manifest" href="/site.webmanifest">
+ <!-- Change color here -->
+    <meta name="msapplication-navbutton-color" content="#FF5933" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="#FF5933" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    
+    <meta charset="UTF-8" />
+    <meta name="theme-color" content="#FF5733" />
+   
+    <title>Phone Price Compare</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/remixicon@4.5.0/fonts/remixicon.css"
+      rel="stylesheet"
+    />
+    <!-- Toastify CSS & JS -->
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+
+    <style>
+      html {
+        scroll-behavior: smooth;
+        --theme-color: #ff5733;
+      }
+      :where([class^="ri-"])::before {
+        content: "\f3c2";
+      }
+      @keyframes float {
+        0% {
+          transform: translateY(0px);
+        }
+        50% {
+          transform: translateY(-20px);
+        }
+        100% {
+          transform: translateY(0px);
+        }
+      }
+      .float-animation {
+        animation: float 3s ease-in-out infinite;
+      }
+
+
+      .page-loader {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        .title {
+            /* font-size: 3.2vw; */
+            font-weight: bold;
+            position: absolute;
+        }
+
+    </style>
+    <link rel="stylesheet" href="/style.css" />
+
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              primary: "#6366f1",
+              secondary: "#4f46e5",
+            },
+            borderRadius: {
+              none: "0px",
+              sm: "4px",
+              DEFAULT: "8px",
+              md: "12px",
+              lg: "16px",
+              xl: "20px",
+              "2xl": "24px",
+              "3xl": "32px",
+              full: "9999px",
+              button: "8px",
+            },
+          },
+        },
+      };
+    </script>
+
+    <script
+      type="module"
+      src="https://unpkg.com/@splinetool/viewer@1.9.72/build/spline-viewer.js"
+    ></script>
+  </head>
+  <body class="bg-white min-h-screen">
+    <!-- <div id="cursor"></div> -->
+
+    <div id="mainbody">
+
+      <div class="page-loader">
+        <h1 class="title title-animation text-6xl text-primary font-['Pacifico'] ">Price Compareto</h1>
+      </div>
+
+      <nav
+        class=" navbar fixed top-0 left-0 right-0 bg-white/80 backdrop-blur-md z-50 border-b border-gray-100"
+      >
+        <div class="max-w-7xl mx-auto px-4">
+          <div class="flex items-center justify-between h-16">
+            <div class="flex items-center nav-title">
+              <a href="#" class="text-2xl font-['Pacifico'] text-primary hover:text-secondary"
+                >Price Compareto</a
+              >
+            </div>
+            <div class="hidden md:flex items-center space-x-8">
+              <a href="#" class="text-gray-700 hover:text-primary hover:scale-[1.1]">Home</a>
+              <a href="#compareSection" class="text-gray-700 hover:text-primary hover:scale-[1.1]"
+                >Compare</a
+              >
+              <a href="#Brand" class="text-gray-700 hover:text-primary hover:scale-[1.1]"
+                >Brands</a
+              >
+              <a href="#ai" class="text-gray-700 hover:text-primary hover:scale-[1.1]"
+                >AI Assistant</a
+              >
+            </div>
+
+            <div class="flex gap-1">
+              <% if (user) { %>
+       
+
+              <div class="flex items-center gap-4">
+                <div class="relative">
+                  <button
+                    id="profileButton2"
+                    class="flex items-center space-x-3 focus:outline-none !rounded-button"
+                  >
+                    <div class="relative">
+                      <img
+                        src="https://static.vecteezy.com/system/resources/previews/020/765/399/non_2x/default-profile-account-unknown-icon-black-silhouette-free-vector.jpg"
+                        class="w-10 h-10 rounded-full object-cover"
+                        alt="Profile"
+                      />
+                      <div
+                        class="absolute bottom-0 right-0 w-3 h-3 bg-green-500 border-2 border-white rounded-full"
+                      ></div>
+                    </div>
+                    <span class="text-gray-900 font-medium hover:text-primary"
+                      ><%= user.username %></span
+                    >
+                    <i class="ri-arrow-down-s-line text-gray-400"></i>
+                  </button>
+                </div>
+              </div>
+
+              <div class="modal-backdrop" id="modalBackdrop"></div>
+
+              <div
+                id="profileModal"
+                class="hidden fixed right-4 top-20 w-80 bg-white rounded-lg shadow-lg z-50"
+              >
+                <div class="p-6">
+                  <div class="info flex items-center space-x-4">
+                    <img
+                      src="https://static.vecteezy.com/system/resources/previews/020/765/399/non_2x/default-profile-account-unknown-icon-black-silhouette-free-vector.jpg"
+                      class="w-20 h-20 rounded-full object-cover"
+                      alt="Profile Large"
+                    />
+                    <div>
+                      <h3 class="text-lg font-semibold text-gray-900">
+                        <%= user.username %>
+                      </h3>
+                      <p class="text-sm text-gray-500"><%= user.email %></p>
+                    </div>
+                  </div>
+
+                  <!-- <div class=" profileComplete mt-6">
+                <div class="flex items-center justify-between mb-2">
+                    <span class="text-sm text-gray-600">Profile Completion</span>
+                    <span class="text-sm font-medium text-primary">85%</span>
+                </div>
+                <div class="w-full bg-gray-200 rounded-full h-2">
+                    <div class="bg-primary rounded-full h-2" style="width: 85%"></div>
+                </div>
+            </div> -->
+
+                  <div class="buttons mt-6 space-y-2">
+                    <button
+                      class="flex items-center w-full px-4 py-2 text-left text-gray-700 hover:bg-gray-50 rounded !rounded-button"
+                    >
+                      <i
+                        class="ri-user-line w-5 h-5 flex items-center justify-center mr-3"
+                      ></i>
+                      Edit Profile
+                    </button>
+
+                    <a href="/review">
+                      <button
+                        class="flex items-center w-full px-4 py-2 text-left text-gray-700 hover:bg-gray-50 rounded !rounded-button"
+                      >
+                        <i
+                          class="ri-star-line w-5 h-5 flex items-center justify-center mr-3"
+                        ></i>
+
+                        Reviews & Ratings
+                      </button>
+                    </a>
+
+                    <% if (user.isAdmin) { %>
+
+                    <a href="/admin">
+                      <button
+                        class="flex items-center w-full px-4 py-2 text-left text-gray-700 hover:bg-gray-50 rounded !rounded-button"
+                      >
+                        <i
+                          class="ri-admin-line w-5 h-5 flex items-center justify-center mr-3"
+                        ></i>
+
+                        Admin DashBoard
+                      </button>
+                    </a>
+                    <% }%>
+
+                    <a href="/history">
+                      <button
+                        class="flex items-center w-full px-4 py-2 text-left text-gray-700 hover:bg-gray-50 rounded !rounded-button"
+                      >
+                        <i
+                          class="ri-history-line w-5 h-5 flex items-center justify-center mr-3"
+                        ></i>
+
+                        History
+                      </button>
+                    </a>
+
+                    <a href="/wishlist">
+                    <button
+                      class="flex items-center w-full px-4 py-2 text-left text-gray-700 hover:bg-gray-50 rounded !rounded-button"
+                    >
+                      <i
+                        class="ri-heart-add-2-line w-5 h-5 flex items-center justify-center mr-3"
+                      ></i>
+                      Wishlist
+                    </button>
+                  </a>
+
+                    <button
+                      class="flex items-center w-full px-4 py-2 text-left text-gray-700 hover:bg-gray-50 rounded !rounded-button"
+                    >
+                      <i
+                        class="ri-customer-service-line w-5 h-5 flex items-center justify-center mr-3"
+                      ></i>
+                      Help & Support
+                    </button>
+                  </div>
+
+                  <div class="signout mt-6 pt-6 border-t border-gray-100">
+                    <a href="/logout">
+                      <button
+                        class="flex items-center w-full px-4 py-2 text-left text-red-600 hover:bg-red-50 rounded !rounded-button"
+                      >
+                        <i
+                          class="ri-logout-box-line w-5 h-5 flex items-center justify-center mr-3"
+                        ></i>
+                        Sign Out
+                      </button>
+                    </a>
+                  </div>
+                </div>
+              </div>
+
+              <% } else { %>
+              <div class="space-x-4">
+                <a
+                  href="/login"
+                  class="bg-purple-800 text-white px-4 py-2 rounded-button hover:bg-primary/90"
+                  >Login</a
+                >
+                <a
+                  href="/register"
+                  class="bg-primarytext-white hover:text-blue-200"
+                  >Signup</a
+                >
+              </div>
+              <% } %>
+            </div>
+          </div>
+        </div>
+      </nav>
+
+      <main class="hero pt-16">
+        <section
+          id="Hero"
+          class="relative overflow-hidden bg-gradient-to-br from-gray-50 to-white"
+        >
+          <div class="max-w-7xl mx-auto px-4 py-20">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+              <div class="text-center md:text-left">
+                <h1
+                  class="text-4xl md:text-6xl font-bold text-gray-900 leading-tight"
+                >
+                  Find the Best Phone Deals
+                  <span class="text-primary">Instantly</span>
+                </h1>
+                <p class="mt-6 text-lg text-gray-600">
+                  Compare prices across major retailers and find the perfect
+                  phone at the perfect price. Save time and money with our
+                  real-time price comparison.
+                </p>
+                <div
+                  class="mt-8 flex flex-col sm:flex-row gap-4 justify-center md:justify-start"
+                >
+                  <a href="/compare">
+                    <button
+                      class="bg-primary text-white px-8 py-4 rounded-button hover:bg-primary/90 whitespace-nowrap"
+                    >
+                      Start Comparing
+                    </button>
+                  </a>
+
+                  <a href="#compareSection">
+                    <button
+                      class="border border-gray-200 px-8 py-4 rounded-button hover:bg-gray-50 whitespace-nowrap"
+                    >
+                      View Trending
+                    </button></a
+                  >
+                </div>
+                <!-- <div class="mt-8 flex items-center justify-center md:justify-start space-x-6">
+                            <div class="flex -space-x-2">
+                                <img src="https://public.readdy.ai/ai/img_res/61cd5de6a98974d01fcd15469df442cd.jpg" class="w-10 h-10 rounded-full border-2 border-white" alt="User"/>
+                                <img src="https://public.readdy.ai/ai/img_res/32824e47196c7f1e37e298dcb32ece6e.jpg" class="w-10 h-10 rounded-full border-2 border-white" alt="User"/>
+                                <img src="https://public.readdy.ai/ai/img_res/1c2bd54c11b09919867485212af6f3fa.jpg" class="w-10 h-10 rounded-full border-2 border-white" alt="User"/>
+                            </div>
+                            <p class="text-gray-600">
+                                <span class="font-semibold text-gray-900">50K+</span> happy users
+                            </p>
+                        </div> -->
+              </div>
+              <div class="relative">
+                <div class="float-animation">
+                  <img
+                    src="https://dimensiva.com/wp-content/uploads/edd/2024/09/iphone-16-2024-by-apple-1024x1024.jpg"
+                    class="bg-black w-90 h-100"
+                    alt="3D Phone"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section id="Brand" class="py-20 bg-white">
+          <div class="max-w-7xl mx-auto px-4">
+            <div class="text-center mb-12">
+              <h2 class="text-3xl font-bold text-gray-900">
+                Trusted by Major Retailers
+              </h2>
+              <p class="mt-4 text-gray-600">
+                We compare prices from the most reliable sources
+              </p>
+            </div>
+
+            
+            <div
+              class="grid grid-cols-2 md:grid-cols-4 gap-8 items-center justify-items-center"
+            >
+              <div class="w-32 h-32 flex items-center justify-center">
+                <i class="ri-amazon-fill text-6xl text-gray-400"></i>
+              </div>
+              <div class="w-32 h-32 flex items-center justify-center">
+                <i class="ri-apple-fill text-6xl text-gray-400"></i>
+              </div>
+              <div class="w-32 h-32 flex items-center justify-center">
+                <i class="ri-google-fill text-6xl text-gray-400"></i>
+              </div>
+              <div class="w-32 h-32 flex items-center justify-center">
+                <i class="ri-alipay-fill text-6xl text-gray-400"></i>
+              </div>
+            </div>
+
+
+          </div>
+        </section>
+
+        <div id="scroll" class="py-20 bg-primary flex">
+          <h1
+            class="whitespace-nowrap ml-10 text-[300px] font-['Pacifico'] text-white"
+          >
+            Price Compareto...Save Time...Save Money...
+          </h1>
+        </div>
+
+        <section
+          id="Work"
+          class="py-20 bg-gradient-to-br from-gray-50 to-white"
+        >
+          <div class="max-w-7xl mx-auto px-4">
+            <div class="text-center mb-12">
+              <h2 class="text-3xl font-bold text-gray-900">How It Works</h2>
+              <p class="mt-4 text-gray-600">
+                Simple steps to find your perfect phone deal
+              </p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+              <div
+                class="p-6 bg-white rounded-lg shadow-lg hover:shadow-xl transition-shadow"
+              >
+                <div
+                  class="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mb-4"
+                >
+                  <i class="ri-search-line text-xl text-primary"></i>
+                </div>
+                <h3 class="text-xl font-semibold text-gray-900 mb-2">Search</h3>
+                <p class="text-gray-600">
+                  Enter the phone model you're interested in or browse through
+                  our categories
+                </p>
+              </div>
+              <div
+                class="p-6 bg-white rounded-lg shadow-lg hover:shadow-xl transition-shadow"
+              >
+                <div
+                  class="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mb-4"
+                >
+                  <i class="ri-compare-line text-xl text-primary"></i>
+                </div>
+                <h3 class="text-xl font-semibold text-gray-900 mb-2">
+                  Compare
+                </h3>
+                <p class="text-gray-600">
+                  View detailed price comparisons from multiple trusted
+                  retailers
+                </p>
+              </div>
+              <div
+                class="p-6 bg-white rounded-lg shadow-lg hover:shadow-xl transition-shadow"
+              >
+                <div
+                  class="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mb-4"
+                >
+                  <i class="ri-shopping-cart-line text-xl text-primary"></i>
+                </div>
+                <h3 class="text-xl font-semibold text-gray-900 mb-2">Save</h3>
+                <p class="text-gray-600">
+                  Choose the best deal and save money on your purchase
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section id="compareSection" class="py-20 bg-white">
+          <div class="max-w-7xl mx-auto px-4">
+            <div class="text-center mb-12">
+              <h2 class="text-3xl font-bold text-gray-900">
+                Popular Comparisons
+              </h2>
+              <p class="mt-4 text-gray-600">
+                See what others are comparing right now
+              </p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+              <div
+                class="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow"
+              >
+                <img
+                  src="https://public.readdy.ai/ai/img_res/38bf813d346e24e3425bc1b90ed7a13f.jpg"
+                  class="w-full h-48 object-cover"
+                  alt="iPhone"
+                />
+                <div class="p-6">
+                  <h3 class="text-xl font-semibold text-gray-900">
+                    iPhone 15 Pro Max
+                  </h3>
+                  <div class="mt-4 flex items-center justify-between">
+                    <span class="text-primary font-semibold">From ₹1,02.454</span>
+                    <a href="/compare?phone=iPhone 15 Pro Max">
+                      <button class="text-primary hover:text-primary/80">
+                        Compare Prices →
+                      </button>
+                    </a>
+                  </div>
+                </div>
+              </div>
+              <div
+                class="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow"
+              >
+                <img
+                  src="https://public.readdy.ai/ai/img_res/c8ae49bddce7611ca82cc940418d99f8.jpg"
+                  class="w-full h-48 object-cover"
+                  alt="Samsung"
+                />
+                <div class="p-6">
+                  <h3 class="text-xl font-semibold text-gray-900">
+                    Samsung Galaxy S24 Ultra
+                  </h3>
+                  <div class="mt-4 flex items-center justify-between">
+                    <span class="text-primary font-semibold">From ₹74,199</span>
+                    <a href="/compare?phone=Samsung Galaxy S24 Ultra">
+                      <button class="text-primary hover:text-primary/80">
+                        Compare Prices →
+                      </button>
+                    </a>
+                  </div>
+                </div>
+              </div>
+              <div
+                class="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow"
+              >
+                <img
+                  src="https://public.readdy.ai/ai/img_res/df779a35fce5947190c6b1d67b8559ea.jpg"
+                  class="w-full h-48 object-cover"
+                  alt="Pixel"
+                />
+                <div class="p-6">
+                  <h3 class="text-xl font-semibold text-gray-900">
+                    Google Pixel 8 Pro
+                  </h3>
+                  <div class="mt-4 flex items-center justify-between">
+                    <span class="text-primary font-semibold">From ₹56,765</span>
+                    <a href="/compare?phone=Google Pixel 8 Pro">
+                      <button class="text-primary hover:text-primary/80">
+                        Compare Prices →
+                      </button>
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section id="ai" class="py-20 bg-white">
+          <div class="max-w-7xl mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+              <div class="relative">
+                <div class="w-84 h-[400px] rounded-lg overflow-hidden">
+                  <img
+                    src="https://i.pinimg.com/originals/c6/2b/df/c62bdf5f0f0ac2a054aa806ed1e07a15.gif"
+                    class="w-full rounded-lg object-contain"
+                    alt="Notifications"
+                  />
+
+                  <!-- <spline-viewer
+                  class="scale-[1.4]"
+                    url="https://prod.spline.design/IQrUPlhBcEc410zI/scene.splinecode"
+                  ></spline-viewer> -->
+
+                  <!-- <spline-viewer url="https://prod.spline.design/7p9jK1RkQ3wImRDa/scene.splinecode"></spline-viewer> -->
+                </div>
+              </div>
+              <div>
+                <h2 class="text-3xl font-bold text-gray-900">
+                  <span class="text-primary">AI</span> Suggestion
+                </h2>
+                <p class="mt-4 text-gray-600">
+                  Let AI Help you, to Find Best Deals for
+                  <span class="text-primary font-bold"> You!</span>
+                </p>
+                <form class="mt-8 flex gap-4">
+                  <input
+                    type="text"
+                    id="searchInput"
+                    placeholder="Enter your Need"
+                    class="flex-1 px-4 py-3 rounded-button border border-gray-200 focus:outline-none focus:border-primary"
+                    required
+                  />
+                  <a
+                    id="searchBtn"
+                    class="bg-primary text-white px-6 py-3 rounded-button hover:bg-primary/90 whitespace-nowrap"
+                  >
+                    Search
+                  </a>
+                </form>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section id="Deal" class="py-20 bg-white">
+          <div class="max-w-7xl mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+              <div>
+                <h2 class="text-3xl font-bold text-gray-900">
+                  Never Miss a Deal
+                </h2>
+                <p class="mt-4 text-gray-600">
+                  Subscribe to our newsletter and get notified about the best
+                  phone deals
+                </p>
+                <form class="mt-8 flex gap-4">
+                  <input
+                    type="email"
+                    placeholder="Enter your email"
+                    class="flex-1 px-4 py-3 rounded-button border border-gray-200 focus:outline-none focus:border-primary"
+                  />
+                  <button
+                    type="submit"
+                    class="bg-primary text-white px-6 py-3 rounded-button hover:bg-primary/90 whitespace-nowrap"
+                  >
+                    Subscribe
+                  </button>
+                </form>
+              </div>
+              <div class="relative">
+                <img
+                  src="https://public.readdy.ai/ai/img_res/4ff48f188b39d9c5716893265606b8a7.jpg"
+                  class="w-full rounded-lg"
+                  alt="Notifications"
+                />
+              </div>
+            </div>
+          </div>
+        </section>
+      </main>
+
+      <footer id="footer" class="bg-gray-900 text-white py-12">
+        <div class="max-w-7xl mx-auto px-4">
+          <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+            <div>
+              <a href="#" class="text-2xl font-['Pacifico'] text-white"
+                >Phone Compareto</a
+              >
+              <p class="mt-4 text-gray-400">
+                Find the best phone deals across all major retailers
+              </p>
+            </div>
+            <div>
+              <h3 class="font-semibold mb-4">Quick Links</h3>
+              <ul class="space-y-2">
+                <li>
+                  <a href="#" class="text-gray-400 hover:text-white">Home</a>
+                </li>
+                <li>
+                  <a href="#" class="text-gray-400 hover:text-white">Compare</a>
+                </li>
+                <li>
+                  <a href="#" class="text-gray-400 hover:text-white">Deals</a>
+                </li>
+                <li>
+                  <a href="#" class="text-gray-400 hover:text-white"
+                    >About Us</a
+                  >
+                </li>
+              </ul>
+            </div>
+            <div>
+              <h3 class="font-semibold mb-4">Support</h3>
+              <ul class="space-y-2">
+                <li>
+                  <a href="#" class="text-gray-400 hover:text-white">Contact</a>
+                </li>
+                <li>
+                  <a href="#" class="text-gray-400 hover:text-white">FAQ</a>
+                </li>
+                <li>
+                  <a href="#" class="text-gray-400 hover:text-white"
+                    >Privacy Policy</a
+                  >
+                </li>
+                <li>
+                  <a href="#" class="text-gray-400 hover:text-white"
+                    >Terms of Service</a
+                  >
+                </li>
+              </ul>
+            </div>
+            <div>
+              <h3 class="font-semibold mb-4">Follow Us</h3>
+              <div class="flex space-x-4">
+                <a href="#" class="text-gray-400 hover:text-white">
+                  <i class="ri-twitter-fill text-xl"></i>
+                </a>
+                <a href="#" class="text-gray-400 hover:text-white">
+                  <i class="ri-facebook-fill text-xl"></i>
+                </a>
+                <a href="#" class="text-gray-400 hover:text-white">
+                  <i class="ri-instagram-fill text-xl"></i>
+                </a>
+                <a href="#" class="text-gray-400 hover:text-white">
+                  <i class="ri-linkedin-fill text-xl"></i>
+                </a>
+              </div>
+            </div>
+          </div>
+          <div
+            class="mt-12 pt-8 border-t border-gray-800 text-center text-gray-400"
+          >
+            <p>© 2025 Phone Price Compare. All rights reserved.</p>
+          </div>
+        </div>
+      </footer>
+
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.5.0/echarts.min.js"></script>
+
+      <script>
+        document
+          .getElementById("searchBtn")
+          .addEventListener("click", function () {
+            const query = document.getElementById("searchInput").value.trim();
+            if (query) {
+              this.href = `/aiSuggestion?query=${encodeURIComponent(query)}`; // Set dynamic href
+            } else {
+              alert("Please enter a search term."); // Prevent empty search
+            }
+          });
+      </script>
+
+      
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+          let navTitle = document.querySelector(".nav-title");
+
+          let navBounds = navTitle.getBoundingClientRect();
+          let targetX = navBounds.left;
+          let targetY = navBounds.top;
+
+          gsap.timeline()
+              .to(".title", { opacity: 1, scale: 2.5, duration: 1, ease: "power2.out" }) // Appear & Zoom
+              .to(".title", { 
+                  scale: 0.4, 
+                  x: targetX - window.innerWidth / 2 + 90, // Adjusting position
+                  y: targetY - window.innerHeight / 2 + 16, // Adjusting position
+                  duration: 1, 
+                  ease: "power2.inOut" 
+              })
+              .to(".page-loader", { opacity: 0, duration: 0.5, onComplete: () => {
+                  document.querySelector(".page-loader").style.display = "none";
+                  gsap.to(".nav-title", { opacity: 1, duration: 0.5 }); // Show nav title after animation
+              }});
+
+              
+      });
+  </script>
+
+
+      <!-- grapgh js -->
+      <!-- <script>
+        const chart = echarts.init(document.getElementById('priceChart'));
+        const option = {
+            animation: false,
+            tooltip: {
+                trigger: 'axis',
+                backgroundColor: 'rgba(255, 255, 255, 0.9)',
+                borderColor: '#eee',
+                borderWidth: 1,
+                textStyle: {
+                    color: '#1f2937'
+                }
+            },
+            grid: {
+                top: 20,
+                right: 20,
+                bottom: 20,
+                left: 50
+            },
+            xAxis: {
+                type: 'category',
+                data: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+                axisLine: {
+                    lineStyle: {
+                        color: '#e5e7eb'
+                    }
+                },
+                axisLabel: {
+                    color: '#1f2937'
+                }
+            },
+            yAxis: {
+                type: 'value',
+                axisLine: {
+                    lineStyle: {
+                        color: '#e5e7eb'
+                    }
+                },
+                axisLabel: {
+                    color: '#1f2937'
+                },
+                splitLine: {
+                    lineStyle: {
+                        color: '#f3f4f6'
+                    }
+                }
+            },
+            series: [
+                {
+                    name: 'iPhone 15 Pro Max',
+                    type: 'line',
+                    smooth: true,
+                    data: [1099, 1089, 1079, 1049, 999, 989],
+                    lineStyle: {
+                        color: 'rgba(87, 181, 231, 1)'
+                    },
+                    areaStyle: {
+                        color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+                            {
+                                offset: 0,
+                                color: 'rgba(87, 181, 231, 0.2)'
+                            },
+                            {
+                                offset: 1,
+                                color: 'rgba(87, 181, 231, 0)'
+                            }
+                        ])
+                    },
+                    symbol: 'none'
+                },
+                {
+                    name: 'Samsung S24 Ultra',
+                    type: 'line',
+                    smooth: true,
+                    data: [1199, 1189, 1179, 1159, 1149, 1129],
+                    lineStyle: {
+                        color: 'rgba(141, 211, 199, 1)'
+                    },
+                    areaStyle: {
+                        color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+                            {
+                                offset: 0,
+                                color: 'rgba(141, 211, 199, 0.2)'
+                            },
+                            {
+                                offset: 1,
+                                color: 'rgba(141, 211, 199, 0)'
+                            }
+                        ])
+                    },
+                    symbol: 'none'
+                }
+            ]
+        };
+        chart.setOption(option);
+        window.addEventListener('resize', () => chart.resize());
+    </script> -->
+    </div>
+
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"
+      integrity="sha512-7eHRwcbYkK4d9g/6tD/mhkf++eoTHwpNM9woBxtPUBWm67zeAfFC+HrdoE2GanKeocly/VxeLvIqwvCdk7qScg=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"
+      integrity="sha512-onMTRKJBKz8M1TnqqDuGBlowlH0ohFzMXYRNebz+yOcc5TQr/zAKsthzhuv0hiyUKEiQEQXEynnXCvNTOk50dg=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
+
+    <script src="/script.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+
+    
+
+<script>
+  function showToast(message, type) {
+    Toastify({
+      text: message,
+      duration: 3000,
+      gravity: "top",
+      position: "right",
+      backgroundColor: type === "success" ? "green" : "red",
+      stopOnFocus: true,
+    }).showToast();
+  }
+
+  // Extract message & type from URL
+  const urlParams = new URLSearchParams(window.location.search);
+  const message = urlParams.get("message");
+  const type = urlParams.get("type");
+
+
+
+  // const urlParams = new URLSearchParams(window.location.search);
+  if (urlParams.has("registerSuccess")) {
+    Toastify({
+      text: "Registration Successful! Please login.",
+      duration: 3000,
+      gravity: "top",
+      position: "right",
+      backgroundColor: "green",
+    }).showToast();
+  }
+
+
+  if (message) {
+    showToast(message, type);
+    window.history.replaceState({}, document.title, window.location.pathname); // Remove query params
+  }
+</script>
+
+    <script>
+      const profileButton2 = document.getElementById("profileButton2");
+      const profileModal = document.getElementById("profileModal");
+      const modalBackdrop = document.getElementById("modalBackdrop");
+      let isModalOpen = false;
+
+      function toggleModal() {
+        isModalOpen = !isModalOpen;
+        profileModal.classList.toggle("hidden");
+        modalBackdrop.style.display = isModalOpen ? "block" : "none";
+      }
+
+      profileButton2.addEventListener("click", (e) => {
+        e.stopPropagation();
+        toggleModal();
+      });
+      document.addEventListener("click", (e) => {
+        if (
+          isModalOpen &&
+          !profileModal.contains(e.target) &&
+          !profileButton2.contains(e.target)
+        ) {
+          toggleModal();
+        }
+      });
+
+      const mockUserData = {
+        name: "Alexander Mitchell",
+        email: "alex.mitchell@company.com",
+        profileCompletion: 85,
+        avatar: "profile-image-url",
+      };
+    </script>
+
+    <script>
+      const profileButton = document.querySelector(".relative button");
+      const dropdownMenu = document.querySelector(".relative .hidden");
+
+      profileButton.addEventListener("click", () => {
+        dropdownMenu.classList.toggle("hidden");
+      });
+
+      document.addEventListener("click", (event) => {
+        if (!profileButton.contains(event.target)) {
+          dropdownMenu.classList.add("hidden");
+        }
+      });
+
+      document
+        .getElementById("logoutButton")
+        .addEventListener("click", function () {
+          localStorage.removeItem("wishlist"); // Clear wishlist
+        });
+    </script>
+  </body>
+</html>

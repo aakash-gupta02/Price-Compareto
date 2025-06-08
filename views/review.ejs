@@ -1,0 +1,400 @@
+<!-- review code -->
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Reviews & Ratings</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/remixicon@4.5.0/fonts/remixicon.css"
+      rel="stylesheet"
+    />
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              primary: "#4F46E5",
+              secondary: "#10B981",
+            },
+            borderRadius: {
+              none: "0px",
+              sm: "4px",
+              DEFAULT: "8px",
+              md: "12px",
+              lg: "16px",
+              xl: "20px",
+              "2xl": "24px",
+              "3xl": "32px",
+              full: "9999px",
+              button: "8px",
+            },
+          },
+        },
+      };
+    </script>
+    <style>
+      :where([class^="ri-"])::before {
+        content: "\f3c2";
+      }
+      .star-rating {
+        display: inline-flex;
+        font-size: 24px;
+        cursor: pointer;
+      }
+      .star-rating i {
+        color: #d1d5db;
+        transition: color 0.2s;
+      }
+      .star-rating i.active {
+        color: #fbbf24;
+      }
+      .review-form {
+        display: none;
+        animation: slideDown 0.3s ease-out;
+      }
+      @keyframes slideDown {
+        from {
+          transform: translateY(-20px);
+          opacity: 0;
+        }
+        to {
+          transform: translateY(0);
+          opacity: 1;
+        }
+      }
+      .rating-bar {
+        width: 200px;
+        height: 8px;
+        background: #e5e7eb;
+        border-radius: 4px;
+        overflow: hidden;
+      }
+      .rating-bar-fill {
+        height: 100%;
+        background: #fbbf24;
+        transition: width 0.3s ease;
+      }
+    </style>
+  </head>
+  <body class="bg-gray-50 min-h-screen">
+    <div class="max-w-7xl mx-auto px-4 py-8">
+      <!-- <h1 class="text-3xl font-bold mb-8">Reviews & Ratings</h1> -->
+      
+      <header
+        class="bg-white rounded-lg shadow-sm p-6 mb-8 flex justify-between"
+      >
+        <div class="flex items-center gap-3">
+          <a href="/">
+            <span class="font-['Pacifico'] text-2xl text-primary"
+              >Price Compareto</span
+            ></a
+          >
+          <h1 class="text-xl font-semibold">Review & Ratings</h1>
+        </div>
+
+        <div class="flex items-center gap-3">
+          <div class="hidden md:flex items-center space-x-8">
+            <a href="/" class="text-gray-700 hover:text-primary">Home</a>
+            <a href="/compare" class="text-gray-700 hover:text-primary"
+              >Compare</a
+            >
+            <a href="/wishlist" class="wishlist-button">View Wishlist</a>
+            <button
+              class="w-10 h-10 flex items-center justify-center hover:bg-gray-100 rounded-full"
+            >
+              <i class="ri-star-fill text-indigo-600 text-2xl"></i>
+            </button>
+          </div>
+        </div>
+      </header>
+       
+        <div class="bg-white  w-52 rounded-lg shadow-sm p-6 mb-8  bottom-0 right-4 fixed ">
+
+          <%
+  let totalRating = 0;
+  reviews.forEach(review => { totalRating += review.rating; });
+  let avgRating = (totalRating / reviews.length).toFixed(1) || 0;
+%>
+
+
+
+
+            <div class="flex items-start gap-8">
+                <div class="text-center">
+                    <div class="text-5xl font-bold text-gray-900"><%= avgRating %></div>
+                    <div class="star-rating mb-2">
+                        <i class="ri-star-fill active"></i>
+                        <i class="ri-star-fill active"></i>
+                        <i class="ri-star-fill active"></i>
+                        <i class="ri-star-fill active"></i>
+                        <i class="ri-star-fill active"></i>
+                    </div>
+                    <div class="text-sm text-gray-500">Based on <%= reviews.length %> reviews</div>
+                </div>
+                
+                <div class="flex-1">
+                    <!-- <div class="space-y-2">
+                        <div class="flex items-center gap-2">
+                            <div class="text-sm w-8">5★</div>
+                            <div class="rating-bar">
+                                <div class="rating-bar-fill" style="width: 75%"></div>
+                            </div>
+                            <div class="text-sm text-gray-500">1,759</div>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <div class="text-sm w-8">4★</div>
+                            <div class="rating-bar">
+                                <div class="rating-bar-fill" style="width: 15%"></div>
+                            </div>
+                            <div class="text-sm text-gray-500">352</div>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <div class="text-sm w-8">3★</div>
+                            <div class="rating-bar">
+                                <div class="rating-bar-fill" style="width: 5%"></div>
+                            </div>
+                            <div class="text-sm text-gray-500">117</div>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <div class="text-sm w-8">2★</div>
+                            <div class="rating-bar">
+                                <div class="rating-bar-fill" style="width: 3%"></div>
+                            </div>
+                            <div class="text-sm text-gray-500">70</div>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <div class="text-sm w-8">1★</div>
+                            <div class="rating-bar">
+                                <div class="rating-bar-fill" style="width: 2%"></div>
+                            </div>
+                            <div class="text-sm text-gray-500">47</div>
+                        </div>
+                    </div> -->
+                </div>
+            </div>
+        </div>
+
+      <div class=" sortOptions flex items-center justify-between mb-6">
+        <!-- <div class="flex gap-3 overflow-x-auto pb-2">
+          <button
+            class="px-4 py-2 bg-primary text-white rounded-full text-sm whitespace-nowrap"
+          >
+            Most Recent
+          </button>
+          <button
+            class="px-4 py-2 bg-white text-gray-700 rounded-full text-sm whitespace-nowrap"
+          >
+            Highest Rated
+          </button>
+          <button
+            class="px-4 py-2 bg-white text-gray-700 rounded-full text-sm whitespace-nowrap"
+          >
+            Critical Reviews
+          </button>
+          <button
+            class="px-4 py-2 bg-white text-gray-700 rounded-full text-sm whitespace-nowrap"
+          >
+            With Photos
+          </button>
+        </div> -->
+       
+        <div>
+          <h1 class=" text-xl font-semibold tracking-wide">Hello, <%= user.username %>👋🏻</h1>
+           <p class="text-lg tracking-wide">We Appreciate your Thoughts & Reviews</p>
+   </div>
+   
+
+        <button
+          id="writeReviewBtn"
+          class="px-6 py-2 bg-primary text-white rounded-button flex items-center gap-2"
+        >
+          <i class="ri-edit-line"></i>
+          Write a Review
+        </button>
+      </div>
+
+
+      <!-- //review-form -->
+      <div
+        class="review-form bg-white rounded-lg shadow-sm p-6 mb-8"
+         id="reviewForm"
+      >
+        <h3 class="text-xl font-semibold mb-4">Write Your Review</h3>
+        <div class="mb-4">
+          <div class="star-rating" id="ratingInput">
+            <i class="ri-star-line" data-rating="1"></i>
+            <i class="ri-star-line" data-rating="2"></i>
+            <i class="ri-star-line" data-rating="3"></i>
+            <i class="ri-star-line" data-rating="4"></i>
+            <i class="ri-star-line" data-rating="5"></i>
+          </div>
+        </div>
+
+        <form action="/reviewData" method="post">
+
+            <!-- Hidden input for rating -->
+         <input type="hidden" name="rating" id="selectedRating" value="0" />
+
+        <input
+          type="text"
+          placeholder="Review Title"
+          name="reviewTitle"
+          class="w-full mb-4 p-3 border rounded-lg"
+        />
+        <textarea
+          placeholder="Write your review here..."
+          class="w-full h-32 mb-4 p-3 border rounded-lg resize-none"
+          name="content"
+        ></textarea>
+        <div class="flex justify-end gap-3">
+          <button
+            class="px-6 py-2 bg-gray-100 text-gray-700 rounded-button"
+            onclick="toggleReviewForm()"
+          >
+            Cancel
+          </button>
+          <button class="px-6 py-2 bg-primary text-white rounded-button">
+            Submit Review
+          </button>
+            </form>
+
+        </div>
+      </div>
+
+
+      <!-- reviewPost -->
+      <div class="space-y-6" id="reviewsList">
+      </div>
+      
+      
+      
+      
+      <!-- <div class="space-y-6" id="reviewsList"> -->
+        
+      </div>
+    </div>
+
+    <script>
+
+    async function fetchReviews() {
+ const response = await fetch("http://localhost:3000/api/reviews");
+
+  try {
+    console.log("Fetching reviews..."); // Debugging
+
+    const response = await fetch("/api/reviews");
+    console.log("Response:", response); // Debugging
+
+    if (!response.ok) {
+      throw new Error(`Failed to fetch reviews: ${response.statusText}`);
+    }
+
+    const reviews = await response.json();
+    console.log("Reviews Data:", reviews); // Debugging
+
+    const reviewsList = document.getElementById("reviewsList");
+    reviewsList.innerHTML = ""; // Clear existing reviews
+
+    if (reviews.length === 0) {
+      reviewsList.innerHTML = "<p>No reviews found.</p>";
+      return;
+    }
+
+    reviews.forEach((review) => {
+  const reviewElement = document.createElement("div");
+  reviewElement.className = "bg-white rounded-lg shadow-sm p-6";
+  reviewElement.innerHTML = `
+    <div class="flex items-start justify-between">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-full bg-blue-600 text-white flex items-center justify-center">
+          ${review.user ? review.user.username.charAt(0).toUpperCase() : "A"} <!-- Default to "A" if user is missing -->
+        </div>
+        <div>
+          <div class="font-semibold">${review.user ? review.user.username : "Anonymous"}</div> <!-- Default to "Anonymous" if user is missing -->
+          <div class="flex items-center gap-2">
+            <div class="star-rating">
+              ${Array(5)
+                .fill()
+                .map(
+                  (_, i) => `
+                <i class="ri-star-fill ${
+                  i < review.rating ? "active" : ""
+                }"></i>
+              `
+                )
+                .join("")}
+            </div>
+            <span class="text-sm text-gray-500">${new Date(
+              review.date
+            ).toDateString()}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  <h4 class="font-semibold mt-4">${review.reviewTitle}</h4>
+
+    <p class="text-gray-600 mt-2">${review.content}</p>
+  `;
+  reviewsList.appendChild(reviewElement);
+});
+  } catch (error) {
+    console.error("Error fetching reviews:", error);
+    const reviewsList = document.getElementById("reviewsList");
+    reviewsList.innerHTML = `<p class="text-red-500">Error: ${error.message}</p>`;
+  }
+}
+
+document.addEventListener("DOMContentLoaded", fetchReviews);
+
+      function toggleReviewForm() {
+        const form = document.getElementById("reviewForm");
+        form.style.display = form.style.display === "none" ? "block" : "none";
+      }
+
+      document
+        .getElementById("writeReviewBtn")
+        .addEventListener("click", toggleReviewForm);
+
+      const ratingInput = document.getElementById("ratingInput");
+      const stars = ratingInput.getElementsByTagName("i");
+
+      Array.from(stars).forEach((star) => {
+        star.addEventListener("mouseover", function () {
+          const rating = this.dataset.rating;
+          updateStars(rating);
+        });
+
+        star.addEventListener("click", function () {
+          const rating = this.dataset.rating;
+          ratingInput.dataset.selected = rating;
+          updateStars(rating);
+        });
+      });
+
+      ratingInput.addEventListener("mouseleave", function () {
+        const selected = this.dataset.selected || 0;
+        updateStars(selected);
+      });
+
+
+
+
+      function updateStars(rating) {
+  Array.from(stars).forEach((star, index) => {
+    star.className = index < rating ? "ri-star-fill active" : "ri-star-line";
+  });
+
+  // Update the hidden input field with the selected rating
+  document.getElementById("selectedRating").value = rating;
+}
+    </script>
+  </body>
+</html>

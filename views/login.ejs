@@ -1,0 +1,304 @@
+<!-- <!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="style.css" />
+    <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
+    <title>Document</title>
+  </head>
+  <body>
+    <div class="bg-zinc-900 h-screen w-full p-10">
+      <div>
+        <form action="/login" method="post">
+          <input
+            class="bg-zinc-800 w-72 text-white block px-3 py-2 mt-4 mb-4"
+            type="text"
+            placeholder="email"
+            name="email"
+          />
+          <input
+            class="bg-zinc-800 w-72 text-white block px-3 py-2 mt-4 mb-4"
+            type="password"
+            placeholder="password"
+            name="password"
+          />
+
+          <button class="bg-blue-500 rounded-md text-white px-3 py-2">
+            Login!
+          </button>
+        </form>
+      </div>
+      <a class="text-blue-500 initial-block inline-block mt-4" href="/register"
+        >Not an User? then Register!!</a
+      >
+    </div>
+
+    <script src="sciript1.js"></script>
+  </body>
+</html> -->
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/remixicon@4.5.0/fonts/remixicon.css"
+      rel="stylesheet"
+    />
+    <!-- Add Toastify CDN -->
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+    <style>
+      :where([class^="ri-"])::before {
+        content: "\f3c2";
+      }
+      .form-container {
+        min-height: 100vh;
+        animation: fadeIn 0.3s ease-in-out;
+      }
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(10px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      .error-message {
+        display: none;
+        color: #ef4444;
+        font-size: 0.875rem;
+        margin-top: 0.25rem;
+      }
+      .loading {
+        pointer-events: none;
+        opacity: 0.7;
+      }
+      .loading::after {
+        content: "";
+        width: 1rem;
+        height: 1rem;
+        border: 2px solid #fff;
+        border-top-color: transparent;
+        border-radius: 50%;
+        display: inline-block;
+        margin-left: 0.5rem;
+        animation: spin 1s linear infinite;
+      }
+      @keyframes spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+    </style>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              primary: "#4F46E5",
+              secondary: "#6366F1",
+            },
+            borderRadius: {
+              none: "0px",
+              sm: "4px",
+              DEFAULT: "8px",
+              md: "12px",
+              lg: "16px",
+              xl: "20px",
+              "2xl": "24px",
+              "3xl": "32px",
+              full: "9999px",
+              button: "8px",
+            },
+          },
+        },
+      };
+    </script>
+  </head>
+  <body class="bg-gray-50">
+    <!-- Login Form -->
+    <div
+      id="login-form"
+      class="form-container flex items-center justify-center p-4"
+    >
+      <div class="w-full max-w-md bg-white rounded-lg shadow-lg p-8">
+        <div class="text-center mb-8">
+          <h1 class="font-['Pacifico'] text-3xl text-primary mb-2">Price Compareto</h1>
+          <h2 class="text-2xl font-semibold text-gray-800">Welcome Back</h2>
+        </div>
+        <form id="loginForm" action="/login" method="post" class="space-y-6">
+          <div>
+            <div class="relative">
+              <div
+                class="absolute inset-y-0 left-0 w-10 h-full flex items-center justify-center text-gray-500"
+              >
+                <i class="ri-mail-line text-lg"></i>
+              </div>
+              <input
+                type="email"
+                id="login-email"
+                name="email"
+                class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-button focus:outline-none focus:border-primary text-sm"
+                placeholder="Email address"
+                required
+              />
+            </div>
+            <span class="error-message" id="login-email-error"></span>
+          </div>
+          <div>
+            <div class="relative">
+              <div
+                class="absolute inset-y-0 left-0 w-10 h-full flex items-center justify-center text-gray-500"
+              >
+                <i class="ri-lock-line text-lg"></i>
+              </div>
+              <input
+                type="password"
+                id="login-password"
+                name="password"
+                class="w-full pl-10 pr-10 py-3 border border-gray-300 rounded-button focus:outline-none focus:border-primary text-sm"
+                placeholder="Password"
+                required
+              />
+              <button
+                type="button"
+                class="absolute inset-y-0 right-0 w-10 h-full flex items-center justify-center text-gray-500 toggle-password"
+              >
+                <i class="ri-eye-line text-lg"></i>
+              </button>
+            </div>
+            <span class="error-message" id="login-password-error"></span>
+          </div>
+          <button
+            type="submit"
+            class="w-full bg-primary text-white py-3 rounded-button font-medium hover:bg-primary/90 transition-colors !rounded-button whitespace-nowrap"
+          >
+            Log in
+          </button>
+        </form>
+        <p class="text-center mt-6 text-gray-600">
+          Don't have an account?
+          <a
+            href="/register"
+            class="text-primary font-medium hover:underline"
+            >Register</a
+          >
+        </p>
+      </div>
+    </div>
+
+    <!-- Notification -->
+    <div
+      id="notification"
+      class="fixed top-4 right-0 max-w-sm bg-primary rounded-lg shadow-lg p-4 transform translate-x-full transition-transform duration-300"
+    >
+      <div class="flex items-center">
+        <i class="ri-checkbox-circle-line text-green-200 text-xl mr-3"></i>
+        <p id="notification-message" class="text-white font-semibold"></p>
+      </div>
+    </div>
+    <!-- Add Toastify CDN -->
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+
+<script>
+  // Function to show notification using Toastify
+  function showToast(message, type) {
+    Toastify({
+      text: message,
+      duration: 5000,
+      gravity: "top", // Position
+      position: "right",
+      backgroundColor: type === "success" ? "green" : "red",
+      stopOnFocus: true,
+    }).showToast();
+  }
+
+  // Extract query parameters (message & type)
+  const urlParams = new URLSearchParams(window.location.search);
+  const message = urlParams.get("message");
+  const type = urlParams.get("type");
+
+  if (message) {
+    showToast(message, type);
+
+    // Remove query parameters from URL after showing notification
+    window.history.replaceState({}, document.title, window.location.pathname);
+  }
+</script>
+
+
+
+    <script>
+//   window.onload = function () {
+//   setTimeout(() => {
+//     showNotification("You Must Login Or Register");
+//   }, 1000); // 2 seconds delay
+// };
+
+
+      // Toggle between login and register forms
+      function toggleForm(form) {
+        const loginForm = document.getElementById("login-form");
+        const registerForm = document.getElementById("register-form");
+        if (form === "login") {
+          loginForm.classList.remove("hidden");
+          registerForm.classList.add("hidden");
+        } else {
+          loginForm.classList.add("hidden");
+          registerForm.classList.remove("hidden");
+        }
+      }
+
+      // Show notification
+      function showNotification(message) {
+        const notification = document.getElementById("notification");
+        const messageElement = document.getElementById("notification-message");
+        messageElement.textContent = message;
+        notification.style.transform = "translateX(0)";
+        setTimeout(() => {
+          notification.style.transform = "translateX(100%)";
+        }, 5000);
+      }
+      
+
+      // Toggle password visibility
+    
+
+    
+      document.querySelectorAll(".toggle-password").forEach((button) => {
+        button.addEventListener("click", function () {
+          const input = this.parentElement.querySelector("input");
+          const icon = this.querySelector("i");
+          if (input.type === "password") {
+            input.type = "text";
+            icon.classList.replace("ri-eye-line", "ri-eye-off-line");
+          } else {
+            input.type = "password";
+            icon.classList.replace("ri-eye-off-line", "ri-eye-line");
+          }
+        });
+      });
+
+      // Hide error messages on input
+      const inputs = document.querySelectorAll("input");
+      inputs.forEach((input) => {
+        input.addEventListener("input", function () {
+          const errorElement = document.getElementById(`${this.id}-error`);
+          errorElement.style.display = "none";
+        });
+      });
+    </script>
+  </body>
+</html>

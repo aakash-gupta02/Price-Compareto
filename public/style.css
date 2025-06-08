@@ -1,0 +1,18 @@
+html,body {
+   /* cursor: none !important; */
+   overflow-x: hidden !important;
+  }
+  
+  h1{
+    color: red;
+  }
+/* 
+  #cursor{
+    height: 20px !important;
+    width: 20px !important;
+    border-radius: 50% !important;
+    background-color: transparent!important;
+    position: fixed !important;
+    z-index: 100 !important;
+  border: 2px solid rgb(54, 27, 153);
+  } */

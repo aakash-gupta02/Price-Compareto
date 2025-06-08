@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="style.css" />
+    <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
+    <title>Document</title>
+  </head>
+  <body>
+    <div class="bg-zinc-900 min-h-screen w-full p-10">
+
+      <div class="flex gap-3">
+      
+         <h1 class="text-white text-3xl">Welcome, <%= user.username %> </h1>
+      </div>
+       
+        <h5 class="text-white text-sm mt-3">You can Create post of a Day</h5>
+
+        <div class="form ">
+
+          <form action="/post" method="post">
+
+            <Textarea name="content" placeholder="Whats in your Mind?" class="w-122  mt-9 rounded-md text-zinc-300 py-3 px-4 resize-none border-1 border-zinc-600 "></Textarea>
+
+            <button class="bg-blue-500 px-4 py-1 rounded-md text-white block mt-2">Create Post</button>
+
+          </form>
+
+
+        </div>
+
+        <h3 class="text-zinc-500 mt-15 ">Your Posts</h3>
+
+
+
+        <div class="flex gap-5 flex-wrap">
+       <% user.post.forEach(function(post){ %>
+          <div class="post border-1 border-zinc-600 w-122 text-white p-4 mt-4 bg-zinc-700/30">
+
+            <h4 class="text-md mb-3 text-blue-500"><%= user.username %></h4>
+            <p class="text-sm"><%= post.content %></p>
+  
+            <div class="btns mt-4 "></div>
+            <a class="text-sm text-blue-500 " href="">Like</a>
+            <a class="text-sm " href="/edit/<%= post._id%>">Edit</a>
+  
+          </div>
+        <% }) %>
+
+        </div>
+
+
+ 
+
+      <!-- <a class="text-blue-500 initial-block" href="/read">Check Users</a> -->
+    </div>
+
+    <script src="sciript1.js"></script>
+  </body>
+</html>

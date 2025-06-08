@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>My Wishlist - PhoneCompare</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              primary: "#4F46E5",
+              secondary: "#10B981",
+            },
+            borderRadius: {
+              none: "0px",
+              sm: "4px",
+              DEFAULT: "8px",
+              md: "12px",
+              lg: "16px",
+              xl: "20px",
+              "2xl": "24px",
+              "3xl": "32px",
+              full: "9999px",
+              button: "8px",
+            },
+          },
+        },
+      };
+    </script>
+    <link
+      href="https://cdn.jsdelivr.net/npm/remixicon@4.5.0/fonts/remixicon.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      /* Custom styles */
+    </style>
+  </head>
+  <body class="bg-gray-50 min-h-screen">
+    <div class="max-w-7xl mx-auto px-4 py-8">
+      <header class="flex items-center justify-between mb-8">
+        <h1 class="text-3xl font-bold text-primary">My Wishlist</h1>
+        <div class="flex items-center gap-4">
+          <button
+            id="sortBtn"
+            class="flex items-center gap-2 px-4 py-2 text-gray-700 bg-white rounded-button shadow-sm hover:bg-gray-50"
+          >
+            <i class="ri-sort-desc w-5 h-5 flex items-center justify-center"></i>
+            <span>Sort</span>
+          </button>
+          <a
+            href="/"
+            class="flex items-center gap-2 px-4 py-2 text-gray-700 bg-white rounded-button shadow-sm hover:bg-gray-50"
+          >
+            <i class="ri-arrow-left-line w-5 h-5 flex items-center justify-center"></i>
+            <span>Back to Home</span>
+          </a>
+          <a
+          href="/compare"
+          class="flex items-center gap-2 px-4 py-2 text-gray-700 bg-white rounded-button shadow-sm hover:bg-gray-50"
+        >
+          <i class="ri-arrow-left-line w-5 h-5 flex items-center justify-center"></i>
+          <span>Back to Compare</span>
+        </a>
+        </div>
+      </header>
+
+      <div class="search-bar relative mb-8">
+        <input
+        autocomplete="off"
+          type="text"
+          id="searchInput"
+          placeholder="Search in wishlist..."
+          class="w-full pl-12 pr-4 py-3 bg-white rounded-button shadow-sm focus:outline-none focus:ring-2 focus:ring-primary/20 text-sm"
+        />
+        <i
+          class="ri-search-line absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5 flex items-center justify-center"
+        ></i>
+      </div>
+
+   
+      <div id="wishlistItems" class="space-y-4">
+        <!-- Dynamic content will be inserted here -->
+      </div>
+
+      <div id="emptyState" class="hidden text-center py-16">
+        <img
+          src="https://public.readdy.ai/ai/img_res/a8a198221568f8b496a05ba198616514.jpg"
+          alt="Empty wishlist"
+          class="w-48 h-48 mx-auto mb-6"
+        />
+        <h3 class="text-xl font-semibold text-gray-900 mb-2">
+          Your wishlist is empty
+        </h3>
+        <p class="text-gray-600 mb-6">
+          Start adding phones to track their prices across different retailers
+        </p>
+        <a href="/compare">
+          <button
+            class="bg-primary text-white px-6 py-3 rounded-button hover:bg-primary/90"
+          >
+            Browse Phones
+          </button>
+        </a>
+
+        <a href="/">
+          <button
+            class="bg-primary text-white px-6 py-3 rounded-button hover:bg-primary/90"
+          >
+            Home Page
+          </button>
+        </a>
+      </div>
+    </div>
+
+    <!-- Sort Modal -->
+    <div
+      id="sortModal"
+      class="hidden fixed inset-0 bg-black/50 flex items-center justify-center"
+    >
+      <div class="bg-white rounded-lg p-6 w-96">
+        <div class="flex justify-between items-center mb-4">
+          <h3 class="text-lg font-semibold">Sort By</h3>
+          <button
+            class="text-gray-500 hover:text-gray-700"
+            onclick="toggleSortModal()"
+          >
+            <i class="ri-close-line w-6 h-6 flex items-center justify-center"></i>
+          </button>
+        </div>
+        <div class="space-y-2">
+          <button
+            class="w-full text-left px-4 py-2 hover:bg-gray-100 rounded-button"
+            onclick="sortItems('price')"
+          >
+            Price: Low to High
+          </button>
+          <button
+            class="w-full text-left px-4 py-2 hover:bg-gray-100 rounded-button"
+            onclick="sortItems('price-desc')"
+          >
+            Price: High to Low
+          </button>
+          <button
+            class="w-full text-left px-4 py-2 hover:bg-gray-100 rounded-button"
+            onclick="sortItems('name')"
+          >
+            Name: A to Z
+          </button>
+          <button
+            class="w-full text-left px-4 py-2 hover:bg-gray-100 rounded-button"
+            onclick="sortItems('date')"
+          >
+            Date Added
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // Brand images (same as in your script)
+      const brandImages = {
+        Samsung:
+          "https://www.designinfo.in/wp-content/uploads/2024/01/Samsung-Galaxy-S24-Ultra-256GB-Titanium-Violet-3.webp",
+        Apple:
+          "https://m.media-amazon.com/images/I/619f09kK7tL._AC_UF1000,1000_QL80_.jpg",
+        Google:
+          "https://rukminim2.flixcart.com/image/850/1000/xif0q/mobile/d/y/m/pixel-9-ga05843-in-google-original-imah3pfgd9zadkyx.jpeg?q=90&crop=false",
+        OnePlus:
+          "https://rukminim2.flixcart.com/image/850/1000/xif0q/mobile/z/i/u/10-pro-5g-ne2211-bv-3-old-oneplus-original-imah4qp5kyyg2qgp.jpeg?q=90&crop=false",
+        Xiaomi:
+          "https://5.imimg.com/data5/SELLER/Default/2022/7/LQ/OZ/YP/155979352/xiaomi-mi-11-0-2oz-128gb-256gb-new-dual-sim-6-81-smartphone-phone-telephoneeoi-500x500.jpg",
+        Oppo: "https://m.media-amazon.com/images/I/81Ww9bOGRfL._AC_UF1000,1000_QL80_.jpg",
+        Vivo: "https://rukminim2.flixcart.com/image/850/1000/xif0q/mobile/p/k/w/-original-imagz6tzsqekf2mg.jpeg?q=90&crop=false",
+        Realme:
+          "https://m.media-amazon.com/images/I/51Jx33Kl0FL._AC_UF1000,1000_QL80_.jpg",
+        Asus: "https://28mobile.com/cdn/shop/products/rog-phone-7-ultimate@2x.jpg?v=1682165739",
+        Nothing: "https://m.media-amazon.com/images/I/71SgrNQOEqL.jpg",
+      };
+
+      // Fetch wishlist data from localStorage
+      let wishlist = JSON.parse(localStorage.getItem("wishlist")) || [];
+
+      // Render wishlist items
+      function renderWishlistItems(filteredWishlist = wishlist) {
+        const container = document.getElementById("wishlistItems");
+        const emptyState = document.getElementById("emptyState");
+
+        if (filteredWishlist.length === 0) {
+          container.innerHTML = "";
+          emptyState.classList.remove("hidden");
+          return;
+        }
+
+        emptyState.classList.add("hidden");
+        container.innerHTML = filteredWishlist
+          .map(
+            (phone) => `
+              <div class="bg-white rounded-lg shadow-sm p-4 flex gap-6">
+                <img src="${
+                  brandImages[phone.brand]
+                }" alt="${phone.name}" class="w-32 h-32 object-cover rounded-lg">
+                <div class="flex-1">
+                  <div class="flex justify-between items-start">
+                    <div>
+                      <h3 class="text-lg font-semibold text-gray-900">${
+                        phone.name
+                      }</h3>
+                      <p class="text-gray-600">${phone.description}</p>
+                    </div>
+                    <button class="text-red-500 hover:text-red-600" onclick="removeFromWishlist(${
+                      phone.id
+                    })">
+                      <i class="ri-delete-bin-line w-5 h-5 flex items-center justify-center"></i>
+                    </button>
+                  </div>
+                  <div class="mt-4 flex items-center justify-between">
+                    <div>
+                      <h4 class="text-lg font-semibold text-gray-900 mb-2">Best Price</h4>
+                      <p class="text-gray-600">Lowest Price: <span class="text-primary font-semibold">₹${(Math.min(...phone.prices.map((p) => p.price)) * 83).toLocaleString("en-IN")
+                      }</span></p>
+                    </div>
+              <a href="/compare?phone=${phone.name}">
+                    <button class="px-4 py-2 text-sm text-primary border border-primary rounded-button hover:bg-primary/5">
+                      Compare Prices
+                    </button></a>
+                  </div>
+                </div>
+              </div>
+            `
+          )
+          .join("");
+      }
+
+      // Remove item from wishlist
+      function removeFromWishlist(id) {
+        wishlist = wishlist.filter((phone) => phone.id !== id);
+        localStorage.setItem("wishlist", JSON.stringify(wishlist));
+        renderWishlistItems(); // Re-render the list
+      }
+
+      // Toggle sort modal
+      function toggleSortModal() {
+        const modal = document.getElementById("sortModal");
+        modal.classList.toggle("hidden");
+      }
+
+      // Sort items
+      function sortItems(criterion) {
+        switch (criterion) {
+          case "price":
+            wishlist.sort((a, b) => Math.min(...a.prices.map((p) => p.price)) - Math.min(...b.prices.map((p) => p.price)));
+            break;
+          case "price-desc":
+            wishlist.sort((a, b) => Math.min(...b.prices.map((p) => p.price)) - Math.min(...a.prices.map((p) => p.price)));
+            break;
+          case "name":
+            wishlist.sort((a, b) => a.name.localeCompare(b.name));
+            break;
+          case "date":
+            // In a real app, we would sort by date added
+            break;
+        }
+        renderWishlistItems();
+        toggleSortModal();
+      }
+
+      // Search functionality
+      const searchInput = document.getElementById("searchInput");
+      searchInput.addEventListener("input", function () {
+        const query = searchInput.value.trim().toLowerCase();
+        const filteredWishlist = wishlist.filter(
+          (phone) =>
+            phone.name.toLowerCase().includes(query) ||
+            phone.description.toLowerCase().includes(query)
+        );
+        renderWishlistItems(filteredWishlist);
+      });
+
+      // Event listeners
+      document.getElementById("sortBtn").addEventListener("click", toggleSortModal);
+
+      // Initial render
+      renderWishlistItems();
+    </script>
+  </body>
+</html>

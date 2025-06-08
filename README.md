@@ -1,8 +1,6 @@
 ---
 
 # 📱 **Phone Price Comparison App**
-🔗 Live Link: [Price Compareto](https://price-compareto.onrender.com/)
-
 
 
 ## 🚀 **Project Overview**

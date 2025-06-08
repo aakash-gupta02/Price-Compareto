@@ -21,4 +21,8 @@ router.get("/aiSuggestion", isLoggedIn, (req, res) => {
   res.render("ai");
 });
 
+router.get("/ai", isLoggedIn, (req, res) => {
+  res.render("ai");
+});
+
 module.exports = router 

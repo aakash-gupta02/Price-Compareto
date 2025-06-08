@@ -8,5 +8,8 @@ router.get("/", (req, res) => {
   res.render("main", { user: req.user || null });
 });
 
+router.get("/home", (req, res) => {
+  res.render("main", { user: req.user || null });
+});
 
 module.exports = router;

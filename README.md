@@ -1,8 +1,12 @@
 ---
 
 # 📱 **Phone Price Comparison App**
+🔗 Live Link: [Price Compareto](https://price-compareto.onrender.com/)
+
+
 
 ## 🚀 **Project Overview**
+
 
 The **Phone Price Comparison App** is a web platform that allows users to compare phone prices across multiple trusted e-commerce websites like **Amazon**, **Flipkart**, and others. The application provides a seamless experience to search, compare prices, and view important details like reviews and features, all in one place.
 
@@ -96,6 +100,8 @@ To run the project locally, follow these steps:
 > **Aakash**  
 > MERN Stack Developer | Passionate about building user-friendly, animated web applications  
 > GitHub: [@aakash10123](https://github.com/aakash10123)
+> 🔗 Live Link: [Price Compareto](https://price-compareto.onrender.com/)
+
 
 ---
 
